@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Happy Birthday</title>
+
+    <!-- ฟอนต์ -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&family=Sacramento&display=swap"
+        rel="stylesheet"
+    />
+
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            font-family: "Prompt", system-ui, -apple-system, BlinkMacSystemFont,
+                "Segoe UI", sans-serif;
+            background: #fff7fb;
+            color: #3b2940;
+        }
+
+        #app {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+        }
+
+        .page {
+            display: none;
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            padding: 20px 16px 26px;
+
+            opacity: 0;
+            transform: translateY(16px) scale(0.97);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        .page.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .page-inner {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 22px 18px 26px;
+            box-shadow: 0 10px 30px rgba(219, 137, 180, 0.16);
+            min-height: calc(100vh - 60px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .title {
+            font-weight: 600;
+            font-size: 1.4rem;
+            text-align: center;
+            margin: 16px 0 6px;
+            color: #3b2940;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            text-align: center;
+            color: #9b6b8c;
+            margin-bottom: 18px;
+        }
+
+        .avatar {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #ffd7e5;
+            box-shadow: 0 6px 20px rgba(219, 137, 180, 0.35);
+        }
+
+        .avatar.large {
+            width: 160px;
+            height: 160px;
+            margin-bottom: 14px;
+        }
+
+        .code-display {
+            margin-top: 16px;
+            margin-bottom: 12px;
+            padding: 10px 16px;
+            border-radius: 999px;
+            border: 1px dashed #f2b3c8;
+            width: 80%;
+            max-width: 260px;
+            text-align: center;
+            letter-spacing: 0.3em;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #3b2940;
+            background: #fff8fb;
+        }
+
+        .code-display.error {
+            animation: shake 0.35s;
+            border-color: #ff7b9a;
+            background: #ffe6ee;
+        }
+
+        .keypad {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            width: 100%;
+            max-width: 320px;
+            margin-top: 10px;
+        }
+
+        .key {
+            border: none;
+            border-radius: 16px;
+            padding: 12px 0;
+            font-size: 1.2rem;
+            font-weight: 500;
+            background: #ffe2f0;
+            color: #4b304f;
+            box-shadow: 0 4px 10px rgba(219, 137, 180, 0.3);
+            cursor: pointer;
+            transition: transform 0.08s ease, box-shadow 0.12s ease,
+                background 0.12s;
+        }
+
+        .key:active {
+            transform: translateY(2px) scale(0.98);
+            box-shadow: 0 2px 5px rgba(219, 137, 180, 0.25);
+            background: #ffd3ea;
+        }
+
+        .key-func {
+            font-size: 0.95rem;
+            background: #f7d0ff;
+        }
+
+        .hint {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: #c08ab0;
+            text-align: center;
+        }
+
+        .primary-btn {
+            border: none;
+            border-radius: 999px;
+            padding: 12px 26px;
+            font-size: 1rem;
+            font-weight: 600;
+            background: linear-gradient(135deg, #ff9ac5, #ffb5de);
+            color: #fff;
+            box-shadow: 0 10px 25px rgba(255, 141, 188, 0.42);
+            margin-top: 20px;
+            cursor: pointer;
+            transition: transform 0.1s ease, box-shadow 0.12s ease;
+        }
+
+        .primary-btn:active {
+            transform: translateY(2px);
+            box-shadow: 0 6px 15px rgba(255, 141, 188, 0.35);
+        }
+
+        /* เค้ก */
+        .cake {
+            margin-top: 16px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .cake-top {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 6px;
+        }
+
+        .candle {
+            width: 10px;
+            height: 40px;
+            background: #ffe0f4;
+            border-radius: 5px;
+            position: relative;
+        }
+
+        .flame {
+            width: 12px;
+            height: 18px;
+            background: radial-gradient(
+                circle at 30% 30%,
+                #fff7b1,
+                #ff9d6c
+            );
+            border-radius: 50%;
+            position: absolute;
+            top: -16px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: flicker 0.6s infinite alternate;
+        }
+
+        .cake-body {
+            width: 180px;
+            height: 70px;
+            background: linear-gradient(180deg, #ffd0e7, #ffadc7);
+            border-radius: 18px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cake-body::before {
+            content: "";
+            position: absolute;
+            width: 200%;
+            height: 18px;
+            background: repeating-linear-gradient(
+                45deg,
+                #ffe5f3 0,
+                #ffe5f3 8px,
+                #ffc4d8 8px,
+                #ffc4d8 16px
+            );
+            top: 0;
+            left: -50%;
+        }
+
+        .cake-plate {
+            width: 210px;
+            height: 16px;
+            background: #f9f5ff;
+            border-radius: 999px;
+            margin-top: 6px;
+            box-shadow: 0 4px 10px rgba(202, 168, 209, 0.35);
+        }
+
+        .cake.blown .flame {
+            opacity: 0;
+            animation: none;
+        }
+
+        .cake.blown .cake-body::after {
+            content: "";
+            position: absolute;
+            width: 120px;
+            height: 40px;
+            top: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: radial-gradient(
+                circle,
+                rgba(255, 255, 255, 0.8),
+                transparent
+            );
+            opacity: 0;
+            animation: smoke 1.2s forwards;
+        }
+
+        /* ของขวัญ */
+        .gift-wrapper {
+            margin-top: 10px;
+            margin-bottom: 8px;
+        }
+
+        .gift-box {
+            width: 130px;
+            height: 110px;
+            position: relative;
+            cursor: pointer;
+            animation: gift-breath 1.5s ease-in-out infinite;
+        }
+
+        .gift-lid {
+            position: absolute;
+            width: 130px;
+            height: 34px;
+            background: #ffb3cd;
+            border-radius: 10px 10px 4px 4px;
+            top: 0;
+            box-shadow: 0 4px 10px rgba(255, 161, 199, 0.45);
+        }
+
+        .gift-body {
+            position: absolute;
+            width: 130px;
+            height: 85px;
+            background: #ffcfdf;
+            border-radius: 4px 4px 12px 12px;
+            bottom: 0;
+            box-shadow: 0 8px 18px rgba(238, 130, 171, 0.35);
+        }
+
+        .gift-ribbon-vertical,
+        .gift-ribbon-horizontal {
+            position: absolute;
+            background: #ff7ba8;
+        }
+
+        .gift-ribbon-vertical {
+            width: 14px;
+            height: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .gift-ribbon-horizontal {
+            height: 14px;
+            width: 100%;
+            top: 32px;
+        }
+
+        .gift-box.shake {
+            animation: gift-shake 0.3s ease;
+        }
+
+        .gift-box.opened .gift-lid {
+            animation: lid-open 0.5s forwards;
+        }
+
+        .gift-content {
+            margin-top: 18px;
+            text-align: center;
+            display: none;
+        }
+
+        .gift-content.show {
+            display: block;
+        }
+
+        .wish-text {
+            font-size: 0.95rem;
+            color: #5a355f;
+            line-height: 1.6;
+            margin: 10px 0 4px;
+        }
+
+        /* หน้า 4 */
+        .love-list {
+            margin-top: 8px;
+            padding-left: 20px;
+            font-size: 0.95rem;
+            color: #4b304f;
+            line-height: 1.7;
+            align-self: stretch;
+        }
+
+        .love-list li + li {
+            margin-top: 6px;
+        }
+
+        /* หน้า 5 */
+        .last-page {
+            justify-content: flex-start;
+            padding-top: 10px;
+        }
+
+        .last-message-label {
+            font-size: 0.92rem;
+            color: #c08ab0;
+            margin-bottom: 8px;
+        }
+
+        .last-message {
+            font-family: "Sacramento", cursive;
+            font-size: 2rem;
+            text-align: center;
+            color: #f074a2;
+            line-height: 1.4;
+            margin-bottom: 6px;
+        }
+
+        .last-sign {
+            font-size: 1rem;
+            color: #7b4b7f;
+        }
+
+        /* แกลเลอรี่ความทรงจำ หน้า 5 */
+        .memory-gallery {
+            margin-top: 8px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .memory-image {
+            width: 100%;
+            max-width: 260px;
+            border-radius: 18px;
+            object-fit: cover;
+            box-shadow: 0 10px 25px rgba(219, 137, 180, 0.35);
+            opacity: 0;
+            transform: scale(0.96);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .memory-image.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* หัวใจลอย */
+        #hearts-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 999;
+        }
+
+        .heart {
+            position: absolute;
+            font-size: 16px;
+            color: #ff8fb8;
+            opacity: 0;
+            animation: float-heart 1.5s linear forwards;
+        }
+
+        /* แอนิเมชัน */
+        @keyframes float-heart {
+            0% {
+                transform: translateY(0) scale(0.7);
+                opacity: 0;
+            }
+            15% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-70px) scale(1.1);
+                opacity: 0;
+            }
+        }
+
+        @keyframes shake {
+            0% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-4px);
+            }
+            50% {
+                transform: translateX(4px);
+            }
+            75% {
+                transform: translateX(-3px);
+            }
+            100% {
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes flicker {
+            from {
+                transform: translateX(-50%) scale(1);
+                opacity: 0.9;
+            }
+            to {
+                transform: translateX(-50%) scale(1.08);
+                opacity: 1;
+            }
+        }
+
+        @keyframes smoke {
+            0% {
+                opacity: 0;
+                transform: translate(-50%, 0);
+            }
+            100% {
+                opacity: 1;
+                transform: translate(-50%, -18px);
+            }
+        }
+
+        @keyframes gift-breath {
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-4px);
+            }
+        }
+
+        @keyframes gift-shake {
+            0% {
+                transform: translateX(0);
+            }
+            25% {
+                transform: translateX(-4px) rotate(-2deg);
+            }
+            50% {
+                transform: translateX(4px) rotate(2deg);
+            }
+            75% {
+                transform: translateX(-2px) rotate(-1deg);
+            }
+            100% {
+                transform: translateX(0) rotate(0);
+            }
+        }
+
+        @keyframes lid-open {
+            0% {
+                transform: translateY(0) rotate(0);
+            }
+            100% {
+                transform: translate(-10px, -34px) rotate(-18deg);
+                opacity: 0.9;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- หน้า 1 -->
+        <section class="page active" id="page-1">
+            <div class="page-inner">
+                <img src="images/fan-1.jpg" alt="แฟน" class="avatar" />
+
+                <h1 class="title">ใส่วันเกิดของพี่เลยครับ</h1>
+                <p class="subtitle">แตะตัวเลขให้ครบ แล้วกดปุ่มตกลงเลยยย 💗</p>
+
+                <div class="code-display" id="code-display">──────</div>
+
+                <div class="keypad">
+                    <button class="key" data-num="1">1</button>
+                    <button class="key" data-num="2">2</button>
+                    <button class="key" data-num="3">3</button>
+                    <button class="key" data-num="4">4</button>
+                    <button class="key" data-num="5">5</button>
+                    <button class="key" data-num="6">6</button>
+                    <button class="key" data-num="7">7</button>
+                    <button class="key" data-num="8">8</button>
+                    <button class="key" data-num="9">9</button>
+                    <button class="key key-func" id="clear-btn">ลบ</button>
+                    <button class="key" data-num="0">0</button>
+                    <button class="key key-func" id="ok-btn">ตกลง</button>
+                </div>
+
+                <p class="hint">
+                    จะมีอะไรรออยู่กันน้าาาาา 🤍
+                </p>
+            </div>
+        </section>
+
+        <!-- หน้า 2 -->
+        <section class="page" id="page-2">
+            <div class="page-inner">
+                <h1 class="title">อธิษฐานเเล้วเป่าเค้กเลยครับ 🎂</h1>
+                <p class="subtitle">
+                    แตะปุ่มด้านล่างเพื่อเป่าเค้ก
+                </p>
+
+                <div class="cake" id="cake">
+                    <div class="cake-top">
+                        <div class="candle">
+                            <div class="flame"></div>
+                        </div>
+                        <div class="candle">
+                            <div class="flame"></div>
+                        </div>
+                        <div class="candle">
+                            <div class="flame"></div>
+                        </div>
+                    </div>
+                    <div class="cake-body"></div>
+                    <div class="cake-plate"></div>
+                </div>
+
+                <button class="primary-btn" id="blow-btn">เป่าเค้ก 💨</button>
+            </div>
+        </section>
+
+        <!-- หน้า 3 -->
+        <section class="page" id="page-3">
+            <div class="page-inner">
+                <h1 class="title">เปิดของขวัญเลย!!! 🎁</h1>
+                <p class="subtitle">แตะที่กล่องของขวัญเบา ๆ นะครับ</p>
+
+                <div class="gift-wrapper">
+                    <div class="gift-box" id="gift-box">
+                        <div class="gift-lid"></div>
+                        <div class="gift-body"></div>
+                        <div class="gift-ribbon-vertical"></div>
+                        <div class="gift-ribbon-horizontal"></div>
+                    </div>
+                </div>
+
+                <div class="gift-content" id="gift-content">
+                    <img
+                        src="images/fan-2.jpg"
+                        alt="แฟน"
+                        class="avatar large"
+                    />
+                    <p class="wish-text">
+                        สุขสันวันเกิดนะครับคนเก่ง น้องขอให้พี่มีความสุขในทุกวัน
+                        เพิ่มน้ำหนักได้เยอะๆ เรียนเก่งๆ หาเงินได้เยอะๆ
+                        จนทำอะไรที่อยากทำได้ 🤍
+                    </p>
+                    <button class="primary-btn" id="to-page-4-btn">
+                        ถัดไป ➜💗
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- หน้า 4 -->
+        <section class="page" id="page-4">
+            <div class="page-inner">
+                <h1 class="title"> 6 สิ่งที่รักในตัวพี่ </h1>
+                <p class="subtitle">
+                    อ่านดูได้เลยยย 💌
+                </p>
+
+                <ol class="love-list">
+                    <li>เป็นคนที่ถึงจะตัวเล็กแต่ก็พยายามหนักกว่าใครๆ</li>
+                    <li>
+                        เป็นคนที่รักศิลปะ ชอบประดิษฐ์ของ
+                    </li>
+                    <li>เป็นคนที่รักตัวเองมากๆ พยายามทำอะไรเพื่อตัวเองตลอด</li>
+                    <li>ถึงจะเจอปัญหาอะไรต่างๆ แต่ก็สู้แบบสุดกำลังเสมอ</li>
+                    <li>เป็นผู้หญิงที่น่ารักมากๆ เลยยย</li>
+                    <li>ยิ้มแล้วทำให้วันธรรมดาสวยขึ้น 🤍 </li>
+                </ol>
+
+                <button class="primary-btn" id="to-page-5-btn">
+                    ถัดไป ➜💗
+                </button>
+            </div>
+        </section>
+
+        <!-- หน้า 5 -->
+        <section class="page" id="page-5">
+            <div class="page-inner last-page">
+                <p class="last-message-label">จากน้องถึงพี่</p>
+                <p class="last-message">
+                    ขอบคุณที่เกิดมาเพื่อให้เราได้เจอกันนะครับ
+                    รักและคิดถึงอยู่ตลอด ตั้งใจเรียนให้จบจากจีน
+                    แล้วมาใช้ชีวิตด้วยกันนะ
+                </p>
+                <p class="last-sign">รักพี่ที่สุดเลยครับ 💖</p>
+
+                <!-- แกลเลอรี่รูปความทรงจำ -->
+                <div class="memory-gallery">
+                    <img
+                        id="memory-image"
+                        src="images/memory1.jpg"
+                        alt="ความทรงจำของเรา"
+                        class="memory-image"
+                    />
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- หัวใจลอย -->
+    <div id="hearts-container"></div>
+
+    <!-- เสียง -->
+    <audio
+        id="click-sound"
+        src="audio/cute-click.wav"
+        preload="auto"
+    ></audio>
+    <audio
+        id="birthday-song"
+        src="audio/happy-birthday.mp3"
+        preload="auto"
+        loop
+    ></audio>
+    <audio
+        id="gift-song"
+        src="audio/gift-song.mp3"
+        preload="auto"
+        loop
+    ></audio>
+    <audio
+        id="love-song"
+        src="audio/love-song.mp3"
+        preload="auto"
+        loop
+    ></audio>
+
+    <script>
+        const CORRECT_CODE = "261147";
+        let inputCode = "";
+
+        const pages = document.querySelectorAll(".page");
+        const codeDisplay = document.getElementById("code-display");
+        const keypadButtons = document.querySelectorAll(".key[data-num]");
+        const clearBtn = document.getElementById("clear-btn");
+        const okBtn = document.getElementById("ok-btn");
+
+        const clickSound = document.getElementById("click-sound");
+        const birthdaySong = document.getElementById("birthday-song");
+        const giftSong = document.getElementById("gift-song");
+        const loveSong = document.getElementById("love-song");
+
+        const heartsContainer = document.getElementById("hearts-container");
+
+        const cake = document.getElementById("cake");
+        const blowBtn = document.getElementById("blow-btn");
+
+        const giftBox = document.getElementById("gift-box");
+        const giftContent = document.getElementById("gift-content");
+        const toPage4Btn = document.getElementById("to-page-4-btn");
+        const toPage5Btn = document.getElementById("to-page-5-btn");
+
+        const memoryImage = document.getElementById("memory-image");
+
+        const memoryImages = [
+            "images/memory1.jpg",
+            "images/memory2.jpg",
+            "images/memory3.jpg",
+            "images/memory4.jpg",
+            "images/memory5.jpg",
+            "images/memory6.jpg",
+            "images/memory7.jpg",
+            "images/memory8.jpg",
+            "images/memory9.jpg",
+            "images/memory10.jpg",
+            "images/memory11.jpg",
+            "images/memory12.jpg",
+            "images/memory13.jpg",
+            "images/memory14.jpg",
+            "images/memory15.jpg"
+        ];
+
+        let memoryIndex = 0;
+        let memorySlideStarted = false;
+        let memoryIntervalId = null;
+
+        function startMemorySlideshow() {
+            if (!memoryImage || memorySlideStarted || memoryImages.length === 0) return;
+            memorySlideStarted = true;
+
+            memoryImage.src = memoryImages[0];
+            memoryImage.classList.add("show");
+
+            memoryIntervalId = setInterval(() => {
+                memoryIndex = (memoryIndex + 1) % memoryImages.length;
+
+                memoryImage.classList.remove("show");
+                void memoryImage.offsetWidth; // force reflow
+                memoryImage.src = memoryImages[memoryIndex];
+                memoryImage.classList.add("show");
+            }, 3000);
+        }
+
+        function playClick() {
+            if (!clickSound) return;
+            clickSound.currentTime = 0;
+            clickSound.play().catch(() => {});
+        }
+
+        // เปลี่ยนหน้า + เอฟเฟกต์ + เพลง
+        function goToPage(pageNumber) {
+            const target = document.getElementById("page-" + pageNumber);
+            if (!target) return;
+
+            pages.forEach((p) => p.classList.remove("active", "show"));
+            target.classList.add("active");
+
+            // ให้เบราว์เซอร์วาดก่อนแล้วค่อยใส่คลาส show เพื่อให้ transition ทำงาน
+            requestAnimationFrame(() => {
+                target.classList.add("show");
+            });
+
+            if (pageNumber === 2) {
+                stopAllSongs();
+                birthdaySong.currentTime = 0;
+                birthdaySong.play().catch(() => {});
+            } 
+            else if (pageNumber === 3) {
+                stopAllSongs();
+                loveSong.currentTime = 0;
+                loveSong.play().catch(() => {});
+            }
+            else if (pageNumber === 5) {
+                startMemorySlideshow();
+            }
+        }
+
+        function stopAllSongs() {
+            [birthdaySong, giftSong, loveSong].forEach((audio) => {
+                audio.pause();
+                audio.currentTime = 0;
+            });
+        }
+
+        function updateCodeDisplay() {
+            if (inputCode.length === 0) {
+                codeDisplay.textContent = "──────";
+                return;
+            }
+            const dots = "•".repeat(inputCode.length);
+            codeDisplay.textContent = dots.padEnd(6, " ");
+        }
+
+        function spawnHeart(x, y) {
+            const heart = document.createElement("span");
+            heart.classList.add("heart");
+            heart.textContent = "❤";
+
+            const rect = heartsContainer.getBoundingClientRect();
+            heart.style.left =
+                x - rect.left + (Math.random() * 16 - 8) + "px";
+            heart.style.top = y - rect.top + "px";
+            heart.style.fontSize = 14 + Math.random() * 6 + "px";
+
+            heartsContainer.appendChild(heart);
+
+            setTimeout(() => {
+                if (heart.parentNode) {
+                    heart.parentNode.removeChild(heart);
+                }
+            }, 1500);
+        }
+
+        // หน้า 1: กดรหัส
+        keypadButtons.forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+                if (inputCode.length >= 6) return;
+                const num = btn.getAttribute("data-num");
+                inputCode += num;
+                updateCodeDisplay();
+
+                playClick();
+
+                const rect = e.target.getBoundingClientRect();
+                spawnHeart(
+                    rect.left + rect.width / 2,
+                    rect.top + rect.height / 2
+                );
+            });
+        });
+
+        clearBtn.addEventListener("click", () => {
+            playClick();
+            inputCode = "";
+            updateCodeDisplay();
+        });
+
+        okBtn.addEventListener("click", () => {
+            playClick();
+            if (inputCode === CORRECT_CODE) {
+                inputCode = "";
+                updateCodeDisplay();
+                goToPage(2);
+            } else {
+                codeDisplay.classList.add("error");
+                setTimeout(() => {
+                    codeDisplay.classList.remove("error");
+                }, 350);
+                inputCode = "";
+                updateCodeDisplay();
+            }
+        });
+
+        // หน้า 2: เป่าเค้ก
+        if (blowBtn) {
+            blowBtn.addEventListener("click", () => {
+                playClick();
+
+                if (cake) {
+                    cake.classList.add("blown");
+                }
+
+                setTimeout(() => {
+                    goToPage(3);
+                }, 1500);
+            });
+        }
+
+        // หน้า 3: กล่องของขวัญ
+        if (giftBox) {
+            giftBox.addEventListener("click", () => {
+                playClick();
+
+                giftBox.classList.add("shake");
+                setTimeout(
+                    () => giftBox.classList.remove("shake"),
+                    300
+                );
+
+                giftBox.classList.add("opened");
+
+                if (giftContent) {
+                    giftContent.classList.add("show");
+                }
+            });
+        }
+
+        if (toPage4Btn) {
+            toPage4Btn.addEventListener("click", () => {
+                playClick();
+                goToPage(4);
+            });
+        }
+
+        if (toPage5Btn) {
+            toPage5Btn.addEventListener("click", () => {
+                playClick();
+                goToPage(5);
+            });
+        }
+
+        // เริ่มที่หน้า 1
+        goToPage(1);
+    </script>
+</body>
+</html>
