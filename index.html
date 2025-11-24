@@ -14,7 +14,7 @@
     />
 
     <style>
-        *,
+        * ,
         *::before,
         *::after {
             box-sizing: border-box;
@@ -25,7 +25,9 @@
             margin: 0;
             font-family: "Prompt", system-ui, -apple-system, BlinkMacSystemFont,
                 "Segoe UI", sans-serif;
-            background: #fff7fb;
+            background: radial-gradient(circle at 0% 0%, #ffe9f7, #fff7fb 40%, #fbe9ff 80%);
+            background-size: 150% 150%;
+            animation: bg-move 16s ease-in-out infinite alternate;
             color: #3b2940;
         }
 
@@ -46,6 +48,7 @@
             opacity: 0;
             transform: translateY(16px) scale(0.97);
             transition: opacity 0.4s ease, transform 0.4s ease;
+            position: relative;
         }
 
         .page.active {
@@ -57,6 +60,23 @@
             transform: translateY(0) scale(1);
         }
 
+        /* คลาสสำหรับอนิเมชันเวลาเปลี่ยนหน้า (แบบสไลด์ขึ้น–ลง + ซูม) */
+        .page-transition-in-up {
+            animation: page-in-up 0.45s ease forwards;
+        }
+
+        .page-transition-in-down {
+            animation: page-in-down 0.45s ease forwards;
+        }
+
+        .page-transition-out-up {
+            animation: page-out-up 0.35s ease forwards;
+        }
+
+        .page-transition-out-down {
+            animation: page-out-down 0.35s ease forwards;
+        }
+
         .page-inner {
             background: #ffffff;
             border-radius: 24px;
@@ -66,6 +86,36 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            animation: card-glow 7s ease-in-out infinite alternate;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* จุดแสงในการ์ด */
+        .page-inner::before,
+        .page-inner::after {
+            content: "";
+            position: absolute;
+            border-radius: 999px;
+            background: radial-gradient(circle, rgba(255,255,255,0.9), transparent);
+            opacity: 0.65;
+            pointer-events: none;
+        }
+
+        .page-inner::before {
+            width: 140px;
+            height: 140px;
+            top: -40px;
+            right: -30px;
+            filter: blur(1px);
+        }
+
+        .page-inner::after {
+            width: 120px;
+            height: 120px;
+            bottom: -30px;
+            left: -20px;
+            filter: blur(1px);
         }
 
         .title {
@@ -90,6 +140,12 @@
             object-fit: cover;
             border: 4px solid #ffd7e5;
             box-shadow: 0 6px 20px rgba(219, 137, 180, 0.35);
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+        }
+
+        .avatar:hover {
+            transform: translateY(-4px) rotate(-2deg);
+            box-shadow: 0 10px 26px rgba(219, 137, 180, 0.5);
         }
 
         .avatar.large {
@@ -172,7 +228,13 @@
             box-shadow: 0 10px 25px rgba(255, 141, 188, 0.42);
             margin-top: 20px;
             cursor: pointer;
-            transition: transform 0.1s ease, box-shadow 0.12s ease;
+            transition: transform 0.1s ease, box-shadow 0.12s ease, filter 0.12s ease;
+        }
+
+        .primary-btn:hover {
+            box-shadow: 0 14px 30px rgba(255, 141, 188, 0.6);
+            transform: translateY(-1px) scale(1.01);
+            filter: brightness(1.03);
         }
 
         .primary-btn:active {
@@ -364,11 +426,164 @@
             align-self: stretch;
         }
 
-        .love-list li + li {
-            margin-top: 6px;
+        .love-list li {
+            opacity: 0;
+            transform: translateY(8px);
         }
 
-        /* หน้า 5 */
+        .love-list.show li {
+            animation: love-in 0.5s forwards;
+        }
+
+        .love-list.show li:nth-child(2) { animation-delay: 0.07s; }
+        .love-list.show li:nth-child(3) { animation-delay: 0.14s; }
+        .love-list.show li:nth-child(4) { animation-delay: 0.21s; }
+        .love-list.show li:nth-child(5) { animation-delay: 0.28s; }
+        .love-list.show li:nth-child(6) { animation-delay: 0.35s; }
+
+        /* หน้า 5 : สมุดความทรงจำ + 3 คลิป */
+        .book-wrapper {
+            margin-top: 14px;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .book {
+            position: relative;
+            width: 100%;
+            max-width: 320px;
+            height: 210px;
+            background: #ffeef7;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(219, 137, 180, 0.35);
+            display: flex;
+            overflow: hidden;
+        }
+
+        .book-left,
+        .book-right {
+            flex: 1;
+            padding: 14px 10px;
+            position: relative;
+        }
+
+        .book-left {
+            background: linear-gradient(135deg, #ffeef9, #ffe1f3);
+            border-right: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .book-right {
+            background: #fff7fc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .book-spine {
+            position: absolute;
+            width: 10px;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            background: radial-gradient(circle, #f6c1da, #f19ec2);
+            box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.12);
+        }
+
+        .chapter-label {
+            font-size: 0.85rem;
+            color: #b26a98;
+            margin-bottom: 6px;
+        }
+
+        .chapter-title {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #5b355f;
+            margin-bottom: 10px;
+        }
+
+        .chapter-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .chapter-list li {
+            font-size: 0.85rem;
+            color: #714066;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .chapter-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 999px;
+            background: #ff8fb8;
+        }
+
+        .book-video {
+            width: 100%;
+            height: 100%;
+            border-radius: 12px;
+            background: #000;
+            object-fit: cover;
+        }
+
+        /* เอฟเฟกต์แฟลชตอนเปลี่ยนคลิป */
+        .video-flash {
+            animation: video-flash 0.45s ease;
+        }
+
+        .book-tabs {
+            width: 100%;
+            max-width: 320px;
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+            position: relative;
+        }
+
+        .tab-btn {
+            border: none;
+            border-radius: 999px;
+            padding: 6px 14px;
+            font-size: 0.8rem;
+            background: #ffe0f2;
+            color: #744067;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(219, 137, 180, 0.3);
+            transition: background 0.15s ease, transform 0.1s ease,
+                box-shadow 0.12s ease;
+        }
+
+        .tab-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(219, 137, 180, 0.45);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #ff9ac5, #ffb5de);
+            color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(255, 141, 188, 0.5);
+        }
+
+        .tab-btn:active {
+            transform: translateY(1px);
+            box-shadow: 0 3px 8px rgba(219, 137, 180, 0.35);
+        }
+
+        .book.shake {
+            animation: book-shake 0.35s ease;
+        }
+
+        /* หน้า 6 (สุดท้าย) */
         .last-page {
             justify-content: flex-start;
             padding-top: 10px;
@@ -394,7 +609,7 @@
             color: #7b4b7f;
         }
 
-        /* แกลเลอรี่ความทรงจำ หน้า 5 */
+        /* แกลเลอรี่ความทรงจำ หน้า 6 */
         .memory-gallery {
             margin-top: 8px;
             width: 100%;
@@ -433,6 +648,16 @@
             color: #ff8fb8;
             opacity: 0;
             animation: float-heart 1.5s linear forwards;
+        }
+
+        /* confetti */
+        .confetti {
+            position: absolute;
+            width: 8px;
+            height: 14px;
+            border-radius: 3px;
+            opacity: 0.95;
+            animation: confetti-down 1.1s linear forwards;
         }
 
         /* แอนิเมชัน */
@@ -527,6 +752,127 @@
                 opacity: 0.9;
             }
         }
+
+        @keyframes bg-move {
+            from {
+                background-position: 0% 0%;
+            }
+            to {
+                background-position: 100% 100%;
+            }
+        }
+
+        @keyframes card-glow {
+            0% {
+                box-shadow: 0 10px 30px rgba(219, 137, 180, 0.16);
+            }
+            100% {
+                box-shadow: 0 14px 40px rgba(219, 137, 180, 0.3);
+            }
+        }
+
+        @keyframes book-shake {
+            0%   { transform: translateX(0); }
+            25%  { transform: translateX(-3px) rotate(-1deg); }
+            50%  { transform: translateX(3px) rotate(1deg); }
+            75%  { transform: translateX(-2px) rotate(-0.5deg); }
+            100% { transform: translateX(0) rotate(0); }
+        }
+
+        @keyframes confetti-down {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(80px) rotate(260deg);
+                opacity: 0;
+            }
+        }
+
+        @keyframes love-in {
+            0% {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* อนิเมชันตัวหนังสือหน้า 5 */
+        @keyframes text-pop-up {
+            0% {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* อนิเมชันแฟลชวิดีโอหน้า 5 */
+        @keyframes video-flash {
+            0% {
+                transform: scale(1);
+                filter: brightness(1);
+            }
+            40% {
+                transform: scale(1.02);
+                filter: brightness(1.2);
+            }
+            100% {
+                transform: scale(1);
+                filter: brightness(1);
+            }
+        }
+
+        /* อนิเมชันเปลี่ยนหน้า สไลด์ขึ้น–ลง */
+        @keyframes page-in-up {
+            0% {
+                opacity: 0;
+                transform: translateY(30px) scale(0.97);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes page-in-down {
+            0% {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.97);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes page-out-up {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-20px) scale(0.97);
+            }
+        }
+
+        @keyframes page-out-down {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.97);
+            }
+        }
     </style>
 </head>
 <body>
@@ -534,9 +880,9 @@
         <!-- หน้า 1 -->
         <section class="page active" id="page-1">
             <div class="page-inner">
-                <img src="images/fan-1.jpg" alt="แฟน" class="avatar" />
+                <img src="images/fan-1.png" alt="แฟน" class="avatar" />
 
-                <h1 class="title">ใส่รหัสเลยครับ</h1>
+                <h1 class="title">ใส่วันเกิดของพี่เลยครับ</h1>
                 <p class="subtitle">แตะตัวเลขให้ครบ แล้วกดปุ่มตกลงเลยยย 💗</p>
 
                 <div class="code-display" id="code-display">──────</div>
@@ -565,9 +911,13 @@
         <!-- หน้า 2 -->
         <section class="page" id="page-2">
             <div class="page-inner">
-                <h1 class="title">อธิษฐานเเล้วเป่าเค้กเลยครับ 🎂</h1>
+                <h1 class="title">เซอร์ไพรส์!!!</h1>
+                <h2 class="title">อธิษฐานเเล้วเป่าเค้กเลยครับ🎂</h2>
                 <p class="subtitle">
                     แตะปุ่มด้านล่างเพื่อเป่าเค้ก
+                </p>
+                <p class="subtitle">
+                    อย่าลืมอธิษฐานก่อนนะครับ
                 </p>
 
                 <div class="cake" id="cake">
@@ -633,9 +983,7 @@
 
                 <ol class="love-list">
                     <li>เป็นคนที่ถึงจะตัวเล็กแต่ก็พยายามหนักกว่าใครๆ</li>
-                    <li>
-                        เป็นคนที่รักศิลปะ ชอบประดิษฐ์ของ
-                    </li>
+                    <li>เป็นคนที่รักศิลปะ ชอบประดิษฐ์ของ</li>
                     <li>เป็นคนที่รักตัวเองมากๆ พยายามทำอะไรเพื่อตัวเองตลอด</li>
                     <li>ถึงจะเจอปัญหาอะไรต่างๆ แต่ก็สู้แบบสุดกำลังเสมอ</li>
                     <li>เป็นผู้หญิงที่น่ารักมากๆ เลยยย</li>
@@ -643,18 +991,65 @@
                 </ol>
 
                 <button class="primary-btn" id="to-page-5-btn">
-                    ถัดไป ➜💗
+                    ถัดไป ➜🎞️
                 </button>
             </div>
         </section>
 
-        <!-- หน้า 5 -->
+        <!-- หน้า 5 : สมุดความทรงจำ + 3 คลิป -->
         <section class="page" id="page-5">
+            <div class="page-inner">
+                <h1 class="title">สมุดความทรงจำของเรา 📖</h1>
+                <p class="subtitle">
+                    เลื่อนเปลี่ยนหน้าเหมือนเปิดหนังสือ เพื่อดูคลิปช่วงเวลาต่าง ๆ ของเรา 💗
+                </p>
+
+                <div class="book-wrapper">
+                    <div class="book">
+                        <div class="book-left">
+                            <div class="chapter-label">บทความทรงจำ</div>
+                            <div class="chapter-title">สามช่วงเวลาที่น้องชอบที่สุด</div>
+                            <ul class="chapter-list">
+                                <li>
+                                    <span class="chapter-dot"></span>
+                                </li>
+                                <li>
+                                    <span class="chapter-dot"></span>
+                                </li>
+                                <li>
+                                    <span class="chapter-dot"></span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="book-spine"></div>
+                        <div class="book-right">
+                            <video id="book-video" class="book-video" controls>
+                                <source src="videos/memory1.mp4" type="video/mp4" />
+                                วิดีโอไม่รองรับในอุปกรณ์นี้
+                            </video>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="book-tabs">
+                    <button class="tab-btn active" data-vid="0">หน้า 1</button>
+                    <button class="tab-btn" data-vid="1">หน้า 2</button>
+                    <button class="tab-btn" data-vid="2">หน้า 3</button>
+                </div>
+
+                <button class="primary-btn" id="to-page-6-btn" style="margin-top: 18px;">
+                    ถัดไป 💖
+                </button>
+            </div>
+        </section>
+
+        <!-- หน้า 6 : สุดท้าย -->
+        <section class="page" id="page-6">
             <div class="page-inner last-page">
                 <p class="last-message-label">จากน้องถึงพี่</p>
                 <p class="last-message">
                     ขอบคุณที่เกิดมาเพื่อให้เราได้เจอกันนะครับ
-                    รักและคิดถึงอยู่ตลอด ตั้งใจเรียนให้จบจากจีน
+                    รักและคิดถึงอยู่ตลอดเลยตั้งใจเรียนให้จบจากจีน
                     แล้วมาใช้ชีวิตด้วยกันนะ
                 </p>
                 <p class="last-sign">รักพี่ที่สุดเลยครับ 💖</p>
@@ -701,7 +1096,7 @@
     ></audio>
 
     <script>
-        const CORRECT_CODE = "261122";
+        const CORRECT_CODE = "261147";
         let inputCode = "";
 
         const pages = document.querySelectorAll(".page");
@@ -724,9 +1119,51 @@
         const giftContent = document.getElementById("gift-content");
         const toPage4Btn = document.getElementById("to-page-4-btn");
         const toPage5Btn = document.getElementById("to-page-5-btn");
+        const toPage6Btn = document.getElementById("to-page-6-btn");
 
         const memoryImage = document.getElementById("memory-image");
+        const loveList   = document.querySelector(".love-list");
 
+        /* สมุดความทรงจำ */
+        const bookVideo    = document.getElementById("book-video");
+        const tabButtons   = document.querySelectorAll(".tab-btn");
+        const chapterLabel = document.querySelector(".chapter-label");
+        const chapterTitle = document.querySelector(".chapter-title");
+        const chapterList  = document.querySelector(".chapter-list");
+
+        const bookVideos = [
+            "videos/memory1.mp4",
+            "videos/memory2.mp4",
+            "videos/memory3.mp4"
+        ];
+
+        const bookTexts = [
+            {
+                label: "บทที่ 1 : ช่วงที่โดนพี่ตกเข้าจังๆ",
+                title: "วันแรก ๆ ที่ได้รู้จักกัน",
+                lines: [
+                    "ตอนนั้นเจอคลิปที่พี่ลงคือเเบบชอบจังๆ คนอะไรก็ไม่รู้ แต่งเท่ก็เข้า แต่งหวานก็เข้า"
+                ]
+            },
+            {
+                label: "บทที่ 2 : ช่วงเวลาที่น้องชอบมากๆ",
+                title: "วันธรรมดาที่กลายเป็นวันพิเศษ",
+                lines: [
+                    "วันที่ได้ใช้เวลาธรรมดากับพี่ นั่งใกล้ ๆ กัน อุ่นมากๆ พอนึกถึงก็มีความสุขมากๆ"
+                ]
+            },
+            {
+                label: "บทที่ 3 : ช่วงที่ซื้อของขวัญมาให้",
+                title: "พอเห็นพี่ดีใจใหญ่น้องก็ดีใจไปด้วย",
+                lines: [
+                    "ตอนนั้นหลังจากแพ้กุ้งมาก็ซื้อโมเดลจิบิมาให้พี่ อยากได้โทโทโร่แต่ได้จีจี้แทน 555"
+                ]
+            }
+        ];
+
+        let currentBookIndex = 0;
+
+        /* สไลด์โชว์รูปหน้าสุดท้าย */
         const memoryImages = [
             "images/memory1.jpg",
             "images/memory2.jpg",
@@ -736,7 +1173,7 @@
             "images/memory6.jpg",
             "images/memory7.jpg",
             "images/memory8.jpg",
-            "images/memory9.jpg",
+            "images/memory9.png",
             "images/memory10.jpg",
             "images/memory11.jpg",
             "images/memory12.jpg",
@@ -748,6 +1185,12 @@
         let memoryIndex = 0;
         let memorySlideStarted = false;
         let memoryIntervalId = null;
+
+        let finalHeartsStarted = false;
+        let finalHeartsInterval = null;
+
+        /* เก็บหน้าปัจจุบันไว้ใช้ตัดสินทิศทางอนิเมชัน */
+        let currentPage = 1;
 
         function startMemorySlideshow() {
             if (!memoryImage || memorySlideStarted || memoryImages.length === 0) return;
@@ -766,56 +1209,23 @@
             }, 3000);
         }
 
+        function startFinalHearts() {
+            if (finalHeartsStarted) return;
+            finalHeartsStarted = true;
+            finalHeartsInterval = setInterval(() => {
+                const x = Math.random() * window.innerWidth;
+                const y = window.innerHeight - 40;
+                spawnHeart(x, y);
+            }, 900);
+        }
+
         function playClick() {
             if (!clickSound) return;
             clickSound.currentTime = 0;
             clickSound.play().catch(() => {});
         }
 
-        // เปลี่ยนหน้า + เอฟเฟกต์ + เพลง
-        function goToPage(pageNumber) {
-            const target = document.getElementById("page-" + pageNumber);
-            if (!target) return;
-
-            pages.forEach((p) => p.classList.remove("active", "show"));
-            target.classList.add("active");
-
-            // ให้เบราว์เซอร์วาดก่อนแล้วค่อยใส่คลาส show เพื่อให้ transition ทำงาน
-            requestAnimationFrame(() => {
-                target.classList.add("show");
-            });
-
-            if (pageNumber === 2) {
-                stopAllSongs();
-                birthdaySong.currentTime = 0;
-                birthdaySong.play().catch(() => {});
-            } 
-            else if (pageNumber === 3) {
-                stopAllSongs();
-                loveSong.currentTime = 0;
-                loveSong.play().catch(() => {});
-            }
-            else if (pageNumber === 5) {
-                startMemorySlideshow();
-            }
-        }
-
-        function stopAllSongs() {
-            [birthdaySong, giftSong, loveSong].forEach((audio) => {
-                audio.pause();
-                audio.currentTime = 0;
-            });
-        }
-
-        function updateCodeDisplay() {
-            if (inputCode.length === 0) {
-                codeDisplay.textContent = "──────";
-                return;
-            }
-            const dots = "•".repeat(inputCode.length);
-            codeDisplay.textContent = dots.padEnd(6, " ");
-        }
-
+        // สร้างหัวใจลอย ๆ
         function spawnHeart(x, y) {
             const heart = document.createElement("span");
             heart.classList.add("heart");
@@ -834,6 +1244,117 @@
                     heart.parentNode.removeChild(heart);
                 }
             }, 1500);
+        }
+
+        // confetti ตอนเป่าเค้ก
+        function fireConfetti(x, y) {
+            const colors = ["#ff9ac5", "#ffd66b", "#9dd6ff", "#b39dff", "#ffb3cd"];
+            for (let i = 0; i < 26; i++) {
+                const c = document.createElement("span");
+                c.classList.add("confetti");
+                const rect = heartsContainer.getBoundingClientRect();
+                c.style.left =
+                    x - rect.left + (Math.random() * 120 - 60) + "px";
+                c.style.top =
+                    y - rect.top + (Math.random() * 40 - 20) + "px";
+                c.style.backgroundColor =
+                    colors[Math.floor(Math.random() * colors.length)];
+                heartsContainer.appendChild(c);
+                setTimeout(() => {
+                    if (c.parentNode) c.parentNode.removeChild(c);
+                }, 1200);
+            }
+        }
+
+        // เปลี่ยนหน้า + เอฟเฟกต์ + เพลง + อนิเมชันสไลด์ขึ้นลง
+        function goToPage(pageNumber) {
+            const target = document.getElementById("page-" + pageNumber);
+            if (!target) return;
+
+            const current = document.querySelector(".page.active");
+            const goingForward = pageNumber > currentPage;
+
+            // ลบคลาส transition เก่าออกจากทุกหน้า
+            pages.forEach((p) => {
+                p.classList.remove(
+                    "page-transition-in-up",
+                    "page-transition-in-down",
+                    "page-transition-out-up",
+                    "page-transition-out-down",
+                    "show"
+                );
+            });
+
+            // อนิเมชันหน้าเก่าเลื่อนออก
+            if (current && current !== target) {
+                if (goingForward) {
+                    current.classList.add("page-transition-out-up");
+                } else {
+                    current.classList.add("page-transition-out-down");
+                }
+                // รอให้อนิเมชันออกจบแล้วค่อยซ่อน
+                setTimeout(() => {
+                    current.classList.remove(
+                        "active",
+                        "page-transition-out-up",
+                        "page-transition-out-down"
+                    );
+                }, 360);
+            } else if (current && current === target) {
+                current.classList.add("active");
+            }
+
+            // แสดงหน้าใหม่ + อนิเมชันเข้า
+            target.classList.add("active");
+
+            requestAnimationFrame(() => {
+                if (goingForward) {
+                    target.classList.add("page-transition-in-up");
+                } else {
+                    target.classList.add("page-transition-in-down");
+                }
+
+                // หัวใจลอยรอบหัวข้อเมื่อเปลี่ยนหน้า
+                const titleEl = target.querySelector(".title");
+                if (titleEl) {
+                    const rect = titleEl.getBoundingClientRect();
+                    const centerX = rect.left + rect.width / 2;
+                    const centerY = rect.top  + rect.height / 2;
+                    for (let i = 0; i < 4; i++) {
+                        const dx = (Math.random() - 0.5) * rect.width * 0.5;
+                        const dy = (Math.random() - 0.5) * 20;
+                        spawnHeart(centerX + dx, centerY + dy);
+                    }
+                }
+
+                target.classList.add("show");
+            });
+
+            // เพลง + เอฟเฟกต์เฉพาะหน้า
+            if (pageNumber === 2) {
+                birthdaySong.currentTime = 0;
+                birthdaySong.play().catch(() => {});
+            } else if (pageNumber === 4) {
+                if (loveList) {
+                    loveList.classList.remove("show");
+                    void loveList.offsetWidth;
+                    loveList.classList.add("show");
+                }
+            } else if (pageNumber === 6) {
+                startMemorySlideshow();
+                startFinalHearts();
+            }
+
+            currentPage = pageNumber;
+        }
+
+        function updateCodeDisplay() {
+            if (inputCode.length === 0) {
+                codeDisplay.textContent = "──────";
+                return;
+            }
+            const dots = "•".repeat(inputCode.length);
+            codeDisplay.textContent = dots.padEnd(6, " ");
         }
 
         // หน้า 1: กดรหัส
@@ -883,6 +1404,11 @@
 
                 if (cake) {
                     cake.classList.add("blown");
+
+                    const rect = cake.getBoundingClientRect();
+                    const cx = rect.left + rect.width / 2;
+                    const cy = rect.top + rect.height / 2;
+                    fireConfetti(cx, cy);
                 }
 
                 setTimeout(() => {
@@ -907,6 +1433,16 @@
                 if (giftContent) {
                     giftContent.classList.add("show");
                 }
+
+                // แตกหัวใจเพิ่มตอนกล่องเปิด
+                const rect = giftBox.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                for (let i = 0; i < 6; i++) {
+                    const dx = (Math.random() - 0.5) * rect.width * 0.7;
+                    const dy = (Math.random() - 0.5) * 20;
+                    spawnHeart(centerX + dx, centerY + dy);
+                }
             });
         }
 
@@ -923,6 +1459,99 @@
                 goToPage(5);
             });
         }
+
+        if (toPage6Btn) {
+            toPage6Btn.addEventListener("click", () => {
+                playClick();
+                goToPage(6);
+            });
+        }
+
+        /* สมุดความทรงจำ: เปลี่ยนคลิป + ข้อความ + เอฟเฟกต์ */
+        function setBookVideo(index) {
+            if (!bookVideo) return;
+            currentBookIndex = index;
+
+            // เปลี่ยนสถานะปุ่มแท็บ
+            tabButtons.forEach((btn) => btn.classList.remove("active"));
+            const activeBtn = document.querySelector(`.tab-btn[data-vid="${index}"]`);
+            if (activeBtn) activeBtn.classList.add("active");
+
+            // เปลี่ยนข้อความในสมุด
+            const data = bookTexts[index];
+            if (data) {
+                if (chapterLabel) {
+                    chapterLabel.textContent = data.label;
+                    chapterLabel.style.animation = "none";
+                    void chapterLabel.offsetWidth;
+                    chapterLabel.style.animation = "text-pop-up 0.35s ease forwards";
+                }
+                if (chapterTitle) {
+                    chapterTitle.textContent = data.title;
+                    chapterTitle.style.animation = "none";
+                    void chapterTitle.offsetWidth;
+                    chapterTitle.style.animation = "text-pop-up 0.4s ease forwards";
+                }
+
+                if (chapterList) {
+                    chapterList.innerHTML = "";
+                    data.lines.forEach((text, idx) => {
+                        const li  = document.createElement("li");
+                        const dot = document.createElement("span");
+                        dot.className = "chapter-dot";
+                        li.appendChild(dot);
+                        li.appendChild(document.createTextNode(" " + text));
+
+                        // ใส่อนิเมชันให้ทีละบรรทัด
+                        li.style.animation = "none";
+                        chapterList.appendChild(li);
+                        void li.offsetWidth;
+                        li.style.animation = "text-pop-up 0.4s ease forwards";
+                        li.style.animationDelay = (0.1 * (idx + 1)) + "s";
+                    });
+                }
+            }
+
+            // เปลี่ยนไฟล์วิดีโอ + เอฟเฟกต์แฟลช
+            bookVideo.pause();
+            const source = bookVideo.querySelector("source");
+            source.src = bookVideos[index];
+            bookVideo.load();
+
+            bookVideo.classList.remove("video-flash");
+            void bookVideo.offsetWidth;
+            bookVideo.classList.add("video-flash");
+
+            bookVideo.play().catch(() => {});
+
+            // เขย่าหนังสือเบา ๆ เวลาเปลี่ยนหน้า + หัวใจรอบหนังสือ
+            const bookEl = document.querySelector(".book");
+            if (bookEl) {
+                bookEl.classList.remove("shake");
+                void bookEl.offsetWidth;
+                bookEl.classList.add("shake");
+
+                const rect = bookEl.getBoundingClientRect();
+                const cx = rect.left + rect.width / 2;
+                const cy = rect.top  + rect.height / 2;
+                for (let i = 0; i < 3; i++) {
+                    const dx = (Math.random() - 0.5) * rect.width * 0.6;
+                    const dy = (Math.random() - 0.5) * 40;
+                    spawnHeart(cx + dx, cy + dy);
+                }
+            }
+        }
+
+        tabButtons.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                playClick();
+                const vidIndex = parseInt(btn.getAttribute("data-vid"), 10);
+                setBookVideo(vidIndex);
+            });
+        });
+
+        // ตั้งคลิปและข้อความเริ่มต้นเป็นหน้า 1
+        setBookVideo(0);
 
         // เริ่มที่หน้า 1
         goToPage(1);
