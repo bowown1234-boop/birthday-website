@@ -2,7 +2,10 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
     <title>Happy Birthday</title>
 
     <!-- ฟอนต์ -->
@@ -27,10 +30,16 @@
                 "Segoe UI", sans-serif;
             background: #fff7fb;
             color: #3b2940;
+            /* รองรับ safe area ของ iPhone */
+            padding: env(safe-area-inset-top)
+                     env(safe-area-inset-right)
+                     env(safe-area-inset-bottom)
+                     env(safe-area-inset-left);
         }
 
         #app {
-            min-height: 100vh;
+            /* ใช้ vh แบบแก้บั๊กบน iPhone */
+            min-height: calc(var(--vh, 1vh) * 100);
             display: flex;
             justify-content: center;
             align-items: stretch;
@@ -141,8 +150,7 @@
             cursor: pointer;
             transition: transform 0.08s ease, box-shadow 0.12s ease,
                 background 0.12s;
-            position: relative;
-            overflow: hidden;
+            touch-action: manipulation; /* กันซูมตอนแตะรัว ๆ */
         }
 
         .key:active {
@@ -175,6 +183,7 @@
             margin-top: 20px;
             cursor: pointer;
             transition: transform 0.1s ease, box-shadow 0.12s ease;
+            touch-action: manipulation;
         }
 
         .primary-btn:active {
@@ -189,7 +198,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            position: relative;
         }
 
         .cake-top {
@@ -389,7 +397,6 @@
             box-shadow: 0 10px 25px rgba(219, 137, 180, 0.35);
             display: flex;
             overflow: hidden;
-            transform-origin: center bottom;
         }
 
         .book-left,
@@ -485,8 +492,7 @@
             box-shadow: 0 4px 10px rgba(219, 137, 180, 0.3);
             transition: background 0.15s ease, transform 0.1s ease,
                 box-shadow 0.12s ease;
-            position: relative;
-            overflow: hidden;
+            touch-action: manipulation;
         }
 
         .tab-btn.active {
@@ -499,18 +505,6 @@
         .tab-btn:active {
             transform: translateY(1px);
             box-shadow: 0 3px 8px rgba(219, 137, 180, 0.35);
-        }
-
-        .tab-btn.active::after {
-            content: "";
-            position: absolute;
-            left: 10%;
-            right: 10%;
-            bottom: 2px;
-            height: 2px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.9);
-            opacity: 0.8;
         }
 
         /* หน้า 6 (สุดท้าย) */
@@ -580,98 +574,7 @@
             animation: float-heart 1.5s linear forwards;
         }
 
-        /* เอฟเฟกต์เพิ่มแต่ละหน้า -------------------------------- */
-
-        /* หน้า 1: avatar หายใจนุ่ม ๆ และ ripple ปุ่มตัวเลข */
-        #page-1 .avatar {
-            animation: avatar-pulse 3s ease-in-out infinite;
-        }
-
-        .key::after {
-            content: "";
-            position: absolute;
-            width: 0;
-            height: 0;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.5);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0;
-        }
-
-        .key:active::after {
-            animation: key-ripple 0.35s ease-out;
-        }
-
-        /* หน้า 2: แสงวิบวับรอบเค้ก */
-        #page-2 .cake::before,
-        #page-2 .cake::after {
-            content: "✦";
-            position: absolute;
-            font-size: 18px;
-            color: #ffb6d9;
-            opacity: 0;
-            animation: sparkle 1.8s infinite ease-in-out;
-        }
-
-        #page-2 .cake::before {
-            top: -8px;
-            left: 10%;
-            animation-delay: 0.1s;
-        }
-
-        #page-2 .cake::after {
-            top: 0;
-            right: 12%;
-            animation-delay: 0.9s;
-        }
-
-        /* หน้า 3: แสงฟุ้งออกจากกล่องเมื่อเปิด */
-        .gift-box.opened::after {
-            content: "";
-            position: absolute;
-            inset: -6px;
-            border-radius: 16px;
-            background: radial-gradient(circle, rgba(255,255,255,0.9), transparent);
-            opacity: 0;
-            animation: gift-glow 0.9s ease-out forwards;
-            pointer-events: none;
-        }
-
-        /* หน้า 4: ข้อความค่อย ๆ เลื่อนขึ้นทีละข้อ */
-        .love-list li {
-            opacity: 0;
-            transform: translateY(8px);
-        }
-
-        #page-4.active .love-list li {
-            animation: fadeUp 0.4s ease forwards;
-        }
-
-        #page-4.active .love-list li:nth-child(1) { animation-delay: 0.05s; }
-        #page-4.active .love-list li:nth-child(2) { animation-delay: 0.12s; }
-        #page-4.active .love-list li:nth-child(3) { animation-delay: 0.19s; }
-        #page-4.active .love-list li:nth-child(4) { animation-delay: 0.26s; }
-        #page-4.active .love-list li:nth-child(5) { animation-delay: 0.33s; }
-        #page-4.active .love-list li:nth-child(6) { animation-delay: 0.40s; }
-
-        /* หน้า 5: สมุดเด้งเบา ๆ ตอนเข้า */
-        #page-5.active .book {
-            animation: book-open 0.7s ease-out;
-        }
-
-        /* หน้า 6: ข้อความสุดท้ายลอยขึ้นลง */
-        #page-6 .last-message {
-            animation: message-float 3.5s ease-in-out infinite alternate;
-        }
-
-        #page-6 .last-sign {
-            animation: sign-fade 3s ease-in-out infinite alternate;
-        }
-
-        /* แอนิเมชันพื้นฐาน -------------------------------------- */
-
+        /* แอนิเมชัน */
         @keyframes float-heart {
             0% {
                 transform: translateY(0) scale(0.7);
@@ -761,104 +664,6 @@
             100% {
                 transform: translate(-10px, -34px) rotate(-18deg);
                 opacity: 0.9;
-            }
-        }
-
-        /* แอนิเมชันที่เพิ่มเข้ามา */
-        @keyframes avatar-pulse {
-            0% {
-                transform: scale(1);
-                box-shadow: 0 6px 20px rgba(219, 137, 180, 0.35);
-            }
-            50% {
-                transform: scale(1.03);
-                box-shadow: 0 10px 26px rgba(219, 137, 180, 0.5);
-            }
-            100% {
-                transform: scale(1);
-                box-shadow: 0 6px 20px rgba(219, 137, 180, 0.35);
-            }
-        }
-
-        @keyframes key-ripple {
-            0% {
-                width: 0;
-                height: 0;
-                opacity: 0.5;
-            }
-            100% {
-                width: 180%;
-                height: 180%;
-                opacity: 0;
-            }
-        }
-
-        @keyframes sparkle {
-            0% {
-                transform: translateY(0) scale(0.8);
-                opacity: 0;
-            }
-            40% {
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(-12px) scale(1.1);
-                opacity: 0;
-            }
-        }
-
-        @keyframes gift-glow {
-            0% {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            60% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: scale(1.05);
-            }
-        }
-
-        @keyframes fadeUp {
-            0% {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes book-open {
-            0% {
-                opacity: 0;
-                transform: scale(0.95) rotateX(8deg);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1) rotateX(0deg);
-            }
-        }
-
-        @keyframes message-float {
-            0% {
-                transform: translateY(0);
-            }
-            100% {
-                transform: translateY(-6px);
-            }
-        }
-
-        @keyframes sign-fade {
-            0% {
-                opacity: 0.7;
-            }
-            100% {
-                opacity: 1;
             }
         }
     </style>
@@ -1003,7 +808,13 @@
                         </div>
                         <div class="book-spine"></div>
                         <div class="book-right">
-                            <video id="book-video" class="book-video" controls>
+                            <video
+                                id="book-video"
+                                class="book-video"
+                                controls
+                                playsinline
+                                webkit-playsinline
+                            >
                                 <source src="videos/memory1.mp4" type="video/mp4" />
                                 วิดีโอไม่รองรับในอุปกรณ์นี้
                             </video>
@@ -1093,6 +904,15 @@
     ></audio>
 
     <script>
+        // แก้บั๊ก 100vh บน iPhone
+        function setVh() {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', vh + 'px');
+        }
+        setVh();
+        window.addEventListener('resize', setVh);
+        window.addEventListener('orientationchange', setVh);
+
         const CORRECT_CODE = "261147";
         let inputCode = "";
 
@@ -1293,6 +1113,7 @@
 
         clearBtn.addEventListener("click", () => {
             playClick();
+
             // ลบทีละตัวจากด้านขวา
             if (inputCode.length > 0) {
                 inputCode = inputCode.slice(0, -1);
@@ -1358,7 +1179,6 @@
         if (toPage4Btn) {
             toPage4Btn.addEventListener("click", () => {
                 playClick();
-                playSound(pageflipSound);
                 goToPage(4);
             });
         }
@@ -1366,7 +1186,6 @@
         if (toPage5Btn) {
             toPage5Btn.addEventListener("click", () => {
                 playClick();
-                playSound(pageflipSound);
                 goToPage(5);
             });
         }
@@ -1374,7 +1193,6 @@
         if (toPage6Btn) {
             toPage6Btn.addEventListener("click", () => {
                 playClick();
-                playSound(pageflipSound);
                 goToPage(6);
             });
         }
