@@ -2,8 +2,10 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    />
     <title>Happy Birthday</title>
 
     <!-- ฟอนต์ -->
@@ -15,7 +17,7 @@
     />
 
     <style>
-        *,
+        * ,
         *::before,
         *::after {
             box-sizing: border-box;
@@ -25,9 +27,10 @@
         body {
             margin: 0;
             font-family: "Prompt", system-ui, -apple-system, BlinkMacSystemFont,
-            "Segoe UI", sans-serif;
+                "Segoe UI", sans-serif;
             background: #fff7fb;
             color: #3b2940;
+            /* รองรับ safe area ของ iPhone */
             padding: env(safe-area-inset-top)
                      env(safe-area-inset-right)
                      env(safe-area-inset-bottom)
@@ -35,7 +38,8 @@
         }
 
         #app {
-            min-height: 100vh;
+            /* ใช้ vh แบบแก้บั๊กบน iPhone */
+            min-height: calc(var(--vh, 1vh) * 100);
             display: flex;
             justify-content: center;
             align-items: stretch;
@@ -47,9 +51,10 @@
             max-width: 480px;
             margin: 0 auto;
             padding: 20px 16px 26px;
+
             opacity: 0;
             transform: translateY(16px) scale(0.97);
-            transition: opacity 0.35s ease, transform 0.35s ease;
+            transition: opacity 0.4s ease, transform 0.4s ease;
         }
 
         .page.active {
@@ -72,10 +77,10 @@
             align-items: center;
         }
 
-        /* จัดหน้า 4 และ 5 ให้ถ่วงกลางแนวตั้งมากขึ้น */
+        /* ขยับหน้า 4 และ 5 ลงมาหน่อย */
         #page-4 .page-inner,
         #page-5 .page-inner {
-            justify-content: center;
+            margin-top: 12px;
         }
 
         .title {
@@ -150,7 +155,8 @@
             box-shadow: 0 4px 10px rgba(219, 137, 180, 0.3);
             cursor: pointer;
             transition: transform 0.08s ease, box-shadow 0.12s ease,
-            background 0.12s;
+                background 0.12s;
+            touch-action: manipulation; /* กันซูมตอนแตะรัว ๆ */
         }
 
         .key:active {
@@ -183,6 +189,7 @@
             margin-top: 20px;
             cursor: pointer;
             transition: transform 0.1s ease, box-shadow 0.12s ease;
+            touch-action: manipulation;
         }
 
         .primary-btn:active {
@@ -490,7 +497,8 @@
             cursor: pointer;
             box-shadow: 0 4px 10px rgba(219, 137, 180, 0.3);
             transition: background 0.15s ease, transform 0.1s ease,
-            box-shadow 0.12s ease;
+                box-shadow 0.12s ease;
+            touch-action: manipulation;
         }
 
         .tab-btn.active {
@@ -664,669 +672,642 @@
                 opacity: 0.9;
             }
         }
-
-        /* เล็กน้อยเผื่อ iPhone จอเล็ก */
-        @media (max-width: 390px) {
-            .page-inner {
-                padding: 18px 14px 22px;
-            }
-            .book {
-                height: 200px;
-            }
-        }
     </style>
 </head>
 <body>
-<div id="app">
-    <!-- หน้า 1 -->
-    <section class="page active" id="page-1">
-        <div class="page-inner">
-            <img src="images/fan-1.png" alt="แฟน" class="avatar" />
+    <div id="app">
+        <!-- หน้า 1 -->
+        <section class="page active" id="page-1">
+            <div class="page-inner">
+                <img src="images/fan-1.png" alt="แฟน" class="avatar" />
 
-            <h1 class="title">ใส่วันเกิดของพี่เลยครับ</h1>
-            <p class="subtitle">แตะตัวเลขให้ครบ แล้วกดปุ่มตกลงเลยยย 💗</p>
+                <h1 class="title">ใส่วันเกิดของพี่เลยครับ</h1>
+                <p class="subtitle">แตะตัวเลขให้ครบ แล้วกดปุ่มตกลงเลยยย 💗</p>
 
-            <div class="code-display" id="code-display">──────</div>
+                <div class="code-display" id="code-display">──────</div>
 
-            <div class="keypad">
-                <button class="key" data-num="1">1</button>
-                <button class="key" data-num="2">2</button>
-                <button class="key" data-num="3">3</button>
-                <button class="key" data-num="4">4</button>
-                <button class="key" data-num="5">5</button>
-                <button class="key" data-num="6">6</button>
-                <button class="key" data-num="7">7</button>
-                <button class="key" data-num="8">8</button>
-                <button class="key" data-num="9">9</button>
-                <button class="key key-func" id="clear-btn">ลบ</button>
-                <button class="key" data-num="0">0</button>
-                <button class="key key-func" id="ok-btn">ตกลง</button>
-            </div>
-
-            <p class="hint">
-                จะมีอะไรรออยู่กันน้าาาาา 🤍
-            </p>
-        </div>
-    </section>
-
-    <!-- หน้า 2 -->
-    <section class="page" id="page-2">
-        <div class="page-inner">
-            <h1 class="title">เซอร์ไพรส์!!!</h1>
-            <h2 class="title">อธิษฐานเเล้วเป่าเค้กเลยครับ🎂</h2>
-            <p class="subtitle">
-                แตะปุ่มด้านล่างเพื่อเป่าเค้ก
-            </p>
-            <p class="subtitle">
-                อย่าลืมอธิษฐานก่อนนะครับ
-            </p>
-
-            <div class="cake" id="cake">
-                <div class="cake-top">
-                    <div class="candle">
-                        <div class="flame"></div>
-                    </div>
-                    <div class="candle">
-                        <div class="flame"></div>
-                    </div>
-                    <div class="candle">
-                        <div class="flame"></div>
-                    </div>
+                <div class="keypad">
+                    <button class="key" data-num="1">1</button>
+                    <button class="key" data-num="2">2</button>
+                    <button class="key" data-num="3">3</button>
+                    <button class="key" data-num="4">4</button>
+                    <button class="key" data-num="5">5</button>
+                    <button class="key" data-num="6">6</button>
+                    <button class="key" data-num="7">7</button>
+                    <button class="key" data-num="8">8</button>
+                    <button class="key" data-num="9">9</button>
+                    <button class="key key-func" id="clear-btn">ลบ</button>
+                    <button class="key" data-num="0">0</button>
+                    <button class="key key-func" id="ok-btn">ตกลง</button>
                 </div>
-                <div class="cake-body"></div>
-                <div class="cake-plate"></div>
-            </div>
 
-            <button class="primary-btn" id="blow-btn">เป่าเค้ก 💨</button>
-        </div>
-    </section>
-
-    <!-- หน้า 3 -->
-    <section class="page" id="page-3">
-        <div class="page-inner">
-            <h1 class="title">เปิดของขวัญเลย!!! 🎁</h1>
-            <p class="subtitle">แตะที่กล่องของขวัญเบา ๆ นะครับ</p>
-
-            <div class="gift-wrapper">
-                <div class="gift-box" id="gift-box">
-                    <div class="gift-lid"></div>
-                    <div class="gift-body"></div>
-                    <div class="gift-ribbon-vertical"></div>
-                    <div class="gift-ribbon-horizontal"></div>
-                </div>
-            </div>
-
-            <div class="gift-content" id="gift-content">
-                <img
-                    src="images/fan-2.jpg"
-                    alt="แฟน"
-                    class="avatar large"
-                />
-                <p class="wish-text">
-                    สุขสันวันเกิดนะครับคนเก่ง น้องขอให้พี่มีความสุขในทุกวัน
-                    เพิ่มน้ำหนักได้เยอะๆ เรียนเก่งๆ หาเงินได้เยอะๆ
-                    จนทำอะไรที่อยากทำได้ 🤍
+                <p class="hint">
+                    จะมีอะไรรออยู่กันน้าาาาา 🤍
                 </p>
-                <button class="primary-btn" id="to-page-4-btn">
-                    ถัดไป ➜💗
+            </div>
+        </section>
+
+        <!-- หน้า 2 -->
+        <section class="page" id="page-2">
+            <div class="page-inner">
+                <h1 class="title">เซอร์ไพรส์!!!</h1>
+                <h2 class="title">อธิษฐานเเล้วเป่าเค้กเลยครับ🎂</h2>
+                <p class="subtitle">
+                    แตะปุ่มด้านล่างเพื่อเป่าเค้ก
+                </p>
+                <p class="subtitle">
+                    อย่าลืมอธิษฐานก่อนนะครับ
+                </p>
+
+                <div class="cake" id="cake">
+                    <div class="cake-top">
+                        <div class="candle">
+                            <div class="flame"></div>
+                        </div>
+                        <div class="candle">
+                            <div class="flame"></div>
+                        </div>
+                        <div class="candle">
+                            <div class="flame"></div>
+                        </div>
+                    </div>
+                    <div class="cake-body"></div>
+                    <div class="cake-plate"></div>
+                </div>
+
+                <button class="primary-btn" id="blow-btn">เป่าเค้ก 💨</button>
+            </div>
+        </section>
+
+        <!-- หน้า 3 -->
+        <section class="page" id="page-3">
+            <div class="page-inner">
+                <h1 class="title">เปิดของขวัญเลย!!! 🎁</h1>
+                <p class="subtitle">แตะที่กล่องของขวัญเบา ๆ นะครับ</p>
+
+                <div class="gift-wrapper">
+                    <div class="gift-box" id="gift-box">
+                        <div class="gift-lid"></div>
+                        <div class="gift-body"></div>
+                        <div class="gift-ribbon-vertical"></div>
+                        <div class="gift-ribbon-horizontal"></div>
+                    </div>
+                </div>
+
+                <div class="gift-content" id="gift-content">
+                    <img
+                        src="images/fan-2.jpg"
+                        alt="แฟน"
+                        class="avatar large"
+                    />
+                    <p class="wish-text">
+                        สุขสันวันเกิดนะครับคนเก่ง น้องขอให้พี่มีความสุขในทุกวัน
+                        เพิ่มน้ำหนักได้เยอะๆ เรียนเก่งๆ หาเงินได้เยอะๆ
+                        จนทำอะไรที่อยากทำได้ 🤍
+                    </p>
+                    <button class="primary-btn" id="to-page-4-btn">
+                        ถัดไป ➜💗
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- หน้า 4 -->
+        <section class="page" id="page-4">
+            <div class="page-inner">
+                <h1 class="title"> 6 สิ่งที่รักในตัวพี่ </h1>
+                <p class="subtitle">
+                    อ่านดูได้เลยยย 💌
+                </p>
+
+                <ol class="love-list">
+                    <li>เป็นคนที่ถึงจะตัวเล็กแต่ก็พยายามหนักกว่าใครๆ</li>
+                    <li>เป็นคนที่รักศิลปะ ชอบประดิษฐ์ของ</li>
+                    <li>เป็นคนที่รักตัวเองมากๆ พยายามทำอะไรเพื่อตัวเองตลอด</li>
+                    <li>ถึงจะเจอปัญหาอะไรต่างๆ แต่ก็สู้แบบสุดกำลังเสมอ</li>
+                    <li>เป็นผู้หญิงที่น่ารักมากๆ เลยยย</li>
+                    <li>ยิ้มแล้วทำให้วันธรรมดาสวยขึ้น 🤍 </li>
+                </ol>
+
+                <button class="primary-btn" id="to-page-5-btn">
+                    ถัดไป ➜🎞️
                 </button>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- หน้า 4 -->
-    <section class="page" id="page-4">
-        <div class="page-inner">
-            <h1 class="title"> 6 สิ่งที่รักในตัวพี่ </h1>
-            <p class="subtitle">
-                อ่านดูได้เลยยย 💌
-            </p>
+        <!-- หน้า 5 : สมุดความทรงจำ + 3 คลิป -->
+        <section class="page" id="page-5">
+            <div class="page-inner">
+                <h1 class="title">สมุดความทรงจำของเรา 📖</h1>
+                <p class="subtitle">
+                    เลื่อนเปลี่ยนหน้าเหมือนเปิดหนังสือ เพื่อดูคลิปช่วงเวลาต่าง ๆ ของเรา 💗
+                </p>
 
-            <ol class="love-list">
-                <li>เป็นคนที่ถึงจะตัวเล็กแต่ก็พยายามหนักกว่าใครๆ</li>
-                <li>เป็นคนที่รักศิลปะ ชอบประดิษฐ์ของ</li>
-                <li>เป็นคนที่รักตัวเองมากๆ พยายามทำอะไรเพื่อตัวเองตลอด</li>
-                <li>ถึงจะเจอปัญหาอะไรต่างๆ แต่ก็สู้แบบสุดกำลังเสมอ</li>
-                <li>เป็นผู้หญิงที่น่ารักมากๆ เลยยย</li>
-                <li>ยิ้มแล้วทำให้วันธรรมดาสวยขึ้น 🤍 </li>
-            </ol>
-
-            <button class="primary-btn" id="to-page-5-btn">
-                ถัดไป ➜🎞️
-            </button>
-        </div>
-    </section>
-
-    <!-- หน้า 5 : สมุดความทรงจำ + 3 คลิป -->
-    <section class="page" id="page-5">
-        <div class="page-inner">
-            <h1 class="title">สมุดความทรงจำของเรา 📖</h1>
-            <p class="subtitle">
-                เลื่อนเปลี่ยนหน้าเหมือนเปิดหนังสือ เพื่อดูคลิปช่วงเวลาต่าง ๆ ของเรา 💗
-            </p>
-
-            <div class="book-wrapper">
-                <div class="book">
-                    <div class="book-left">
-                        <div class="chapter-label">บทความทรงจำ</div>
-                        <div class="chapter-title">สามช่วงเวลาที่น้องชอบที่สุด</div>
-                        <ul class="chapter-list">
-                            <!-- เนื้อหาจะถูกใส่จาก JS -->
-                        </ul>
-                    </div>
-                    <div class="book-spine"></div>
-                    <div class="book-right">
-                        <video id="book-video" class="book-video" controls playsinline>
-                            <source src="videos/memory1.mp4" type="video/mp4" />
-                            วิดีโอไม่รองรับในอุปกรณ์นี้
-                        </video>
+                <div class="book-wrapper">
+                    <div class="book">
+                        <div class="book-left">
+                            <div class="chapter-label">บทความทรงจำ</div>
+                            <div class="chapter-title">สามช่วงเวลาที่น้องชอบที่สุด</div>
+                            <ul class="chapter-list">
+                                <!-- เนื้อหาจะถูกใส่จาก JS -->
+                            </ul>
+                        </div>
+                        <div class="book-spine"></div>
+                        <div class="book-right">
+                            <video
+                                id="book-video"
+                                class="book-video"
+                                controls
+                                playsinline
+                                webkit-playsinline
+                                muted
+                            >
+                                <source src="videos/memory1.mp4" type="video/mp4" />
+                                วิดีโอไม่รองรับในอุปกรณ์นี้
+                            </video>
+                        </div>
                     </div>
                 </div>
+
+                <div class="book-tabs">
+                    <button class="tab-btn active" data-vid="0">หน้า 1</button>
+                    <button class="tab-btn" data-vid="1">หน้า 2</button>
+                    <button class="tab-btn" data-vid="2">หน้า 3</button>
+                </div>
+
+                <button class="primary-btn" id="to-page-6-btn" style="margin-top: 18px;">
+                    ถัดไป 💖
+                </button>
             </div>
+        </section>
 
-            <div class="book-tabs">
-                <button class="tab-btn active" data-vid="0">หน้า 1</button>
-                <button class="tab-btn" data-vid="1">หน้า 2</button>
-                <button class="tab-btn" data-vid="2">หน้า 3</button>
+        <!-- หน้า 6 : สุดท้าย -->
+        <section class="page" id="page-6">
+            <div class="page-inner last-page">
+                <p class="last-message-label">จากน้องถึงพี่</p>
+                <p class="last-message">
+                    ขอบคุณที่เกิดมาเพื่อให้เราได้เจอกันนะครับ
+                    รักและคิดถึงอยู่ตลอดเลยตั้งใจเรียนให้จบจากจีน
+                    แล้วมาใช้ชีวิตด้วยกันนะ
+                </p>
+                <p class="last-sign">รักพี่ที่สุดเลยครับ 💖</p>
+
+                <!-- แกลเลอรี่รูปความทรงจำ -->
+                <div class="memory-gallery">
+                    <img
+                        id="memory-image"
+                        src="images/memory1.jpg"
+                        alt="ความทรงจำของเรา"
+                        class="memory-image"
+                    />
+                </div>
+
+                <!-- ปุ่มเล่นใหม่ทั้งหมด -->
+                <button class="primary-btn" id="replay-btn" style="margin-top: 18px;">
+                    เล่นใหม่
+                </button>
             </div>
+        </section>
+    </div>
 
-            <button class="primary-btn" id="to-page-6-btn" style="margin-top: 18px;">
-                ถัดไป 💖
-            </button>
-        </div>
-    </section>
+    <!-- หัวใจลอย -->
+    <div id="hearts-container"></div>
 
-    <!-- หน้า 6 : สุดท้าย -->
-    <section class="page" id="page-6">
-        <div class="page-inner last-page">
-            <p class="last-message-label">จากน้องถึงพี่</p>
-            <p class="last-message">
-                ขอบคุณที่เกิดมาเพื่อให้เราได้เจอกันนะครับ
-                รักและคิดถึงอยู่ตลอดเลยตั้งใจเรียนให้จบจากจีน
-                แล้วมาใช้ชีวิตด้วยกันนะ
-            </p>
-            <p class="last-sign">รักพี่ที่สุดเลยครับ 💖</p>
+    <!-- เสียง -->
+    <audio
+        id="click-sound"
+        src="audio/cute-click.wav"
+        preload="auto"
+    ></audio>
+    <audio
+        id="birthday-song"
+        src="audio/happy-birthday.mp3"
+        preload="auto"
+        loop
+    ></audio>
+    <audio
+        id="gift-song"
+        src="audio/gift-song.mp3"
+        preload="auto"
+        loop
+    ></audio>
+    <audio
+        id="love-song"
+        src="audio/love-song.mp3"
+        preload="auto"
+        loop
+    ></audio>
 
-            <!-- แกลเลอรี่รูปความทรงจำ -->
-            <div class="memory-gallery">
-                <img
-                    id="memory-image"
-                    src="images/memory1.jpg"
-                    alt="ความทรงจำของเรา"
-                    class="memory-image"
-                />
-            </div>
+    <!-- เสียงใหม่ตามข้อ 1 และ 2 -->
+    <audio
+        id="gift-open-sound"
+        src="audio/gift-open.wav"
+        preload="auto"
+    ></audio>
+    <audio
+        id="pageflip-sound"
+        src="audio/pageflip.wav"
+        preload="auto"
+    ></audio>
 
-            <!-- ปุ่มเล่นใหม่ทั้งหมด -->
-            <button class="primary-btn" id="replay-btn" style="margin-top: 18px;">
-                เล่นใหม่
-            </button>
-        </div>
-    </section>
-</div>
-
-<!-- หัวใจลอย -->
-<div id="hearts-container"></div>
-
-<!-- เสียง -->
-<audio
-    id="click-sound"
-    src="audio/cute-click.wav"
-    preload="auto"
-></audio>
-<audio
-    id="birthday-song"
-    src="audio/happy-birthday.mp3"
-    preload="auto"
-    loop
-></audio>
-<audio
-    id="gift-song"
-    src="audio/gift-song.mp3"
-    preload="auto"
-    loop
-></audio>
-<audio
-    id="love-song"
-    src="audio/love-song.mp3"
-    preload="auto"
-    loop
-></audio>
-
-<!-- เสียงใหม่ -->
-<audio
-    id="gift-open-sound"
-    src="audio/gift-open.wav"
-    preload="auto"
-></audio>
-<audio
-    id="pageflip-sound"
-    src="audio/pageflip.wav"
-    preload="auto"
-></audio>
-
-<script>
-    const CORRECT_CODE = "261147";
-    let inputCode = "";
-    let currentPage = 1;
-
-    const pages = document.querySelectorAll(".page");
-    const codeDisplay = document.getElementById("code-display");
-    const keypadButtons = document.querySelectorAll(".key[data-num]");
-    const clearBtn = document.getElementById("clear-btn");
-    const okBtn = document.getElementById("ok-btn");
-
-    const clickSound = document.getElementById("click-sound");
-    const birthdaySong = document.getElementById("birthday-song");
-    const giftSong = document.getElementById("gift-song");
-    const loveSong = document.getElementById("love-song");
-
-    const giftOpenSound = document.getElementById("gift-open-sound");
-    const pageflipSound = document.getElementById("pageflip-sound");
-
-    const heartsContainer = document.getElementById("hearts-container");
-
-    const cake = document.getElementById("cake");
-    const blowBtn = document.getElementById("blow-btn");
-
-    const giftBox = document.getElementById("gift-box");
-    const giftContent = document.getElementById("gift-content");
-    const toPage4Btn = document.getElementById("to-page-4-btn");
-    const toPage5Btn = document.getElementById("to-page-5-btn");
-    const toPage6Btn = document.getElementById("to-page-6-btn");
-    const replayBtn = document.getElementById("replay-btn");
-
-    const memoryImage = document.getElementById("memory-image");
-
-    /* สมุดความทรงจำ */
-    const bookVideo   = document.getElementById("book-video");
-    const tabButtons  = document.querySelectorAll(".tab-btn");
-    const chapterLabel = document.querySelector(".chapter-label");
-    const chapterTitle = document.querySelector(".chapter-title");
-    const chapterList  = document.querySelector(".chapter-list");
-
-    const bookVideos = [
-        "videos/memory1.mp4",
-        "videos/memory2.mp4",
-        "videos/memory3.mp4"
-    ];
-
-    const bookTexts = [
-        {
-            label: "บทที่ 1 : ช่วงที่โดนพี่ตกเข้าจังๆ",
-            title: "วันแรก ๆ ที่ได้รู้จักกัน",
-            lines: [
-                "ตอนนั้นเจอคลิปที่พี่ลงคือเเบบชอบจังๆ"
-            ]
-        },
-        {
-            label: "บทที่ 2 : ช่วงเวลาที่น้องชอบมากๆ",
-            title: "วันธรรมดาที่กลายเป็นวันพิเศษ",
-            lines: [
-                "วันที่ได้ใช้เวลาธรรมดากับพี่นั่งใกล้ๆกันอุ่นมากๆ"
-            ]
-        },
-        {
-            label: "บทที่ 3 : ช่วงที่ซื้อของขวัญมาให้",
-            title: "พอเห็นพี่ดีใจใหญ่น้องก็ดีใจไปด้วย",
-            lines: [
-                "ตอนนั้นซื้อโมเดลจิบิมาให้พี่ อยากได้โทโทโร่แต่ได้จีจี้แทน"
-            ]
+    <script>
+        // แก้บั๊ก 100vh บน iPhone
+        function setVh() {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', vh + 'px');
         }
-    ];
+        setVh();
+        window.addEventListener('resize', setVh);
+        window.addEventListener('orientationchange', setVh);
 
-    let currentBookIndex = 0;
+        const CORRECT_CODE = "261147";
+        let inputCode = "";
 
-    /* สไลด์โชว์รูปหน้าสุดท้าย */
-    const memoryImages = [
-        "images/memory1.jpg",
-        "images/memory2.jpg",
-        "images/memory3.jpg",
-        "images/memory4.jpg",
-        "images/memory5.jpg",
-        "images/memory6.jpg",
-        "images/memory7.jpg",
-        "images/memory8.jpg",
-        "images/memory9.png",
-        "images/memory10.jpg",
-        "images/memory11.jpg",
-        "images/memory12.jpg",
-        "images/memory13.jpg",
-        "images/memory14.jpg",
-        "images/memory15.jpg"
-    ];
+        const pages = document.querySelectorAll(".page");
+        const codeDisplay = document.getElementById("code-display");
+        const keypadButtons = document.querySelectorAll(".key[data-num]");
+        const clearBtn = document.getElementById("clear-btn");
+        const okBtn = document.getElementById("ok-btn");
 
-    let memoryIndex = 0;
-    let memorySlideStarted = false;
-    let memoryIntervalId = null;
+        const clickSound = document.getElementById("click-sound");
+        const birthdaySong = document.getElementById("birthday-song");
+        const giftSong = document.getElementById("gift-song");
+        const loveSong = document.getElementById("love-song");
 
-    function startMemorySlideshow() {
-        if (!memoryImage || memorySlideStarted || memoryImages.length === 0) return;
-        memorySlideStarted = true;
+        const giftOpenSound = document.getElementById("gift-open-sound");
+        const pageflipSound = document.getElementById("pageflip-sound");
 
-        memoryImage.src = memoryImages[0];
-        memoryImage.classList.add("show");
+        const heartsContainer = document.getElementById("hearts-container");
 
-        memoryIntervalId = setInterval(() => {
-            memoryIndex = (memoryIndex + 1) % memoryImages.length;
+        const cake = document.getElementById("cake");
+        const blowBtn = document.getElementById("blow-btn");
 
-            memoryImage.classList.remove("show");
-            void memoryImage.offsetWidth; // force reflow
-            memoryImage.src = memoryImages[memoryIndex];
-            memoryImage.classList.add("show");
-        }, 3000);
-    }
+        const giftBox = document.getElementById("gift-box");
+        const giftContent = document.getElementById("gift-content");
+        const toPage4Btn = document.getElementById("to-page-4-btn");
+        const toPage5Btn = document.getElementById("to-page-5-btn");
+        const toPage6Btn = document.getElementById("to-page-6-btn");
+        const replayBtn = document.getElementById("replay-btn");
 
-    function stopAllSongs() {
-        [birthdaySong, giftSong, loveSong].forEach((audio) => {
-            if (!audio) return;
-            audio.pause();
-            audio.currentTime = 0;
-        });
-    }
+        const memoryImage = document.getElementById("memory-image");
 
-    function playClick() {
-        if (!clickSound) return;
-        clickSound.currentTime = 0;
-        clickSound.play().catch(() => {});
-    }
+        /* สมุดความทรงจำ */
+        const bookVideo   = document.getElementById("book-video");
+        const tabButtons  = document.querySelectorAll(".tab-btn");
+        const chapterLabel = document.querySelector(".chapter-label");
+        const chapterTitle = document.querySelector(".chapter-title");
+        const chapterList  = document.querySelector(".chapter-list");
 
-    function playSound(el) {
-        if (!el) return;
-        el.currentTime = 0;
-        el.play().catch(() => {});
-    }
+        const bookVideos = [
+            "videos/memory1.mp4",
+            "videos/memory2.mp4",
+            "videos/memory3.mp4"
+        ];
 
-    // เปลี่ยนหน้า
-    function goToPage(pageNumber) {
-        const target = document.getElementById("page-" + pageNumber);
-        if (!target) return;
-        currentPage = pageNumber;
-
-        pages.forEach((p) => p.classList.remove("active", "show"));
-        target.classList.add("active");
-
-        requestAnimationFrame(() => {
-            target.classList.add("show");
-        });
-
-        if (pageNumber === 2) {
-            stopAllSongs();
-            birthdaySong.currentTime = 0;
-            birthdaySong.play().catch(() => {});
-        } else if (pageNumber === 5) {
-            // หน้า สมุดความทรงจำ: เปิดเพลง love-song เบาๆ + พยายามเล่นคลิปหน้า 1 ให้อัตโนมัติ
-            stopAllSongs();
-            if (loveSong) {
-                loveSong.volume = 0.6;
-                loveSong.play().catch(() => {});
+        const bookTexts = [
+            {
+                label: "บทที่ 1 : ช่วงที่โดนพี่ตกเข้าจังๆ",
+                title: "วันแรก ๆ ที่ได้รู้จักกัน",
+                lines: [
+                    "ตอนนั้นเจอคลิปที่พี่ลงคือเเบบชอบจังๆ"
+                ]
+            },
+            {
+                label: "บทที่ 2 : ช่วงเวลาที่น้องชอบมากๆ",
+                title: "วันธรรมดาที่กลายเป็นวันพิเศษ",
+                lines: [
+                    "วันที่ได้ใช้เวลาธรรมดากับพี่นั่งใกล้ๆกันอุ่นมากๆ"
+                ]
+            },
+            {
+                label: "บทที่ 3 : ช่วงที่ซื้อของขวัญมาให้",
+                title: "พอเห็นพี่ดีใจใหญ่น้องก็ดีใจไปด้วย",
+                lines: [
+                    "ตอนนั้นซื้อโมเดลจิบิมาให้พี่ อยากได้โทโทโร่แต่ได้จีจี้แทน"
+                ]
             }
-            setBookVideo(0, true); // autoplay หน้า 1 ถ้าเบราว์เซอร์อนุญาต
-        } else if (pageNumber === 6) {
-            // หน้า สุดท้าย + สไลด์โชว์
-            stopAllSongs();
-            if (loveSong) {
-                loveSong.volume = 0.6;
-                loveSong.play().catch(() => {});
-            }
-            startMemorySlideshow();
-        }
-    }
+        ];
 
-    function updateCodeDisplay() {
-        if (inputCode.length === 0) {
-            codeDisplay.textContent = "──────";
-            return;
-        }
-        const dots = "•".repeat(inputCode.length);
-        codeDisplay.textContent = dots.padEnd(6, " ");
-    }
+        let currentBookIndex = 0;
 
-    function spawnHeart(x, y) {
-        const heart = document.createElement("span");
-        heart.classList.add("heart");
-        heart.textContent = "❤";
+        /* สไลด์โชว์รูปหน้าสุดท้าย */
+        const memoryImages = [
+            "images/memory1.jpg",
+            "images/memory2.jpg",
+            "images/memory3.jpg",
+            "images/memory4.jpg",
+            "images/memory5.jpg",
+            "images/memory6.jpg",
+            "images/memory7.jpg",
+            "images/memory8.jpg",
+            "images/memory9.png",
+            "images/memory10.jpg",
+            "images/memory11.jpg",
+            "images/memory12.jpg",
+            "images/memory13.jpg",
+            "images/memory14.jpg",
+            "images/memory15.jpg"
+        ];
 
-        const rect = heartsContainer.getBoundingClientRect();
-        heart.style.left =
-            x - rect.left + (Math.random() * 16 - 8) + "px";
-        heart.style.top = y - rect.top + "px";
-        heart.style.fontSize = 14 + Math.random() * 6 + "px";
+        let memoryIndex = 0;
+        let memorySlideStarted = false;
+        let memoryIntervalId = null;
 
-        heartsContainer.appendChild(heart);
+        function startMemorySlideshow() {
+            if (!memoryImage || memorySlideStarted || memoryImages.length === 0) return;
+            memorySlideStarted = true;
 
-        setTimeout(() => {
-            if (heart.parentNode) {
-                heart.parentNode.removeChild(heart);
-            }
-        }, 1500);
-    }
-
-    // หน้า 1: กดรหัส
-    keypadButtons.forEach((btn) => {
-        btn.addEventListener("click", (e) => {
-            if (inputCode.length >= 6) return;
-            const num = btn.getAttribute("data-num");
-            inputCode += num;
-            updateCodeDisplay();
-
-            playClick();
-
-            const rect = e.target.getBoundingClientRect();
-            spawnHeart(
-                rect.left + rect.width / 2,
-                rect.top + rect.height / 2
-            );
-        });
-    });
-
-    clearBtn.addEventListener("click", () => {
-        playClick();
-        // ลบทีละตัวจากด้านขวา
-        if (inputCode.length > 0) {
-            inputCode = inputCode.slice(0, -1);
-            updateCodeDisplay();
-        }
-    });
-
-    okBtn.addEventListener("click", () => {
-        playClick();
-        if (inputCode === CORRECT_CODE) {
-            inputCode = "";
-            updateCodeDisplay();
-            goToPage(2);
-        } else {
-            codeDisplay.classList.add("error");
-            setTimeout(() => {
-                codeDisplay.classList.remove("error");
-            }, 350);
-            inputCode = "";
-            updateCodeDisplay();
-        }
-    });
-
-    // หน้า 2: เป่าเค้ก
-    if (blowBtn) {
-        blowBtn.addEventListener("click", () => {
-            playClick();
-
-            if (cake) {
-                cake.classList.add("blown");
-            }
-
-            setTimeout(() => {
-                goToPage(3);
-            }, 1500);
-        });
-    }
-
-    // หน้า 3: กล่องของขวัญ
-    if (giftBox) {
-        giftBox.addEventListener("click", () => {
-            playClick();
-
-            if (!giftBox.classList.contains("opened")) {
-                // เล่นเสียงเปิดกล่องครั้งแรก
-                playSound(giftOpenSound);
-            }
-
-            giftBox.classList.add("shake");
-            setTimeout(
-                () => giftBox.classList.remove("shake"),
-                300
-            );
-
-            giftBox.classList.add("opened");
-
-            if (giftContent) {
-                giftContent.classList.add("show");
-            }
-        });
-    }
-
-    if (toPage4Btn) {
-        toPage4Btn.addEventListener("click", () => {
-            playClick();
-            goToPage(4);
-        });
-    }
-
-    if (toPage5Btn) {
-        toPage5Btn.addEventListener("click", () => {
-            playClick();
-            goToPage(5);
-        });
-    }
-
-    if (toPage6Btn) {
-        toPage6Btn.addEventListener("click", () => {
-            playClick();
-            goToPage(6);
-        });
-    }
-
-    /* สมุดความทรงจำ: เปลี่ยนคลิป + ข้อความ */
-    function setBookVideo(index, autoplay = true) {
-        if (!bookVideo) return;
-        currentBookIndex = index;
-
-        // ปุ่มแท็บ
-        tabButtons.forEach((btn) => btn.classList.remove("active"));
-        const activeBtn = document.querySelector(`.tab-btn[data-vid="${index}"]`);
-        if (activeBtn) activeBtn.classList.add("active");
-
-        // ข้อความ
-        const data = bookTexts[index];
-        if (data) {
-            if (chapterLabel) chapterLabel.textContent = data.label;
-            if (chapterTitle) chapterTitle.textContent = data.title;
-
-            if (chapterList) {
-                chapterList.innerHTML = "";
-                data.lines.forEach((text) => {
-                    const li  = document.createElement("li");
-                    const dot = document.createElement("span");
-                    dot.className = "chapter-dot";
-                    li.appendChild(dot);
-                    li.appendChild(document.createTextNode(" " + text));
-                    chapterList.appendChild(li);
-                });
-            }
-        }
-
-        // เปลี่ยนไฟล์วิดีโอ
-        bookVideo.pause();
-        const source = bookVideo.querySelector("source");
-        source.src = bookVideos[index];
-        bookVideo.load();
-        if (autoplay) {
-            bookVideo.play().catch(() => {});
-        }
-    }
-
-    tabButtons.forEach((btn) => {
-        btn.addEventListener("click", () => {
-            playClick();
-            playSound(pageflipSound);   // เสียงพลิกหน้า
-            const vidIndex = parseInt(btn.getAttribute("data-vid"), 10);
-            setBookVideo(vidIndex, true);
-        });
-    });
-
-    // คุมเพลง love-song ตอนเล่นคลิปในหน้า 5
-    if (bookVideo) {
-        bookVideo.addEventListener("play", () => {
-            if (currentPage === 5 && loveSong) {
-                loveSong.pause();
-            }
-        });
-
-        function resumeLoveSongIfOnPage5() {
-            if (currentPage === 5 && loveSong) {
-                loveSong.volume = 0.6;
-                loveSong.play().catch(() => {});
-            }
-        }
-
-        bookVideo.addEventListener("pause", resumeLoveSongIfOnPage5);
-        bookVideo.addEventListener("ended", resumeLoveSongIfOnPage5);
-    }
-
-    // ฟังก์ชันรีเซ็ตทั้งหมดสำหรับปุ่มเล่นใหม่
-    function resetExperience() {
-        // หยุดเพลงทั้งหมด
-        stopAllSongs();
-
-        // รีเซ็ตรหัส
-        inputCode = "";
-        updateCodeDisplay();
-
-        // รีเซ็ตเค้ก
-        if (cake) {
-            cake.classList.remove("blown");
-        }
-
-        // รีเซ็ตของขวัญ
-        if (giftBox) {
-            giftBox.classList.remove("opened", "shake");
-        }
-        if (giftContent) {
-            giftContent.classList.remove("show");
-        }
-
-        // รีเซ็ตสมุดความทรงจำ
-        if (bookVideo) {
-            bookVideo.pause();
-            bookVideo.currentTime = 0;
-        }
-        setBookVideo(0, false);  // ตั้งกลับหน้า 1 แต่ไม่เล่นอัตโนมัติ
-
-        // รีเซ็ตสไลด์โชว์
-        if (memoryIntervalId) {
-            clearInterval(memoryIntervalId);
-        }
-        memoryIntervalId = null;
-        memorySlideStarted = false;
-        memoryIndex = 0;
-        if (memoryImage) {
-            memoryImage.classList.remove("show");
             memoryImage.src = memoryImages[0];
+            memoryImage.classList.add("show");
+
+            memoryIntervalId = setInterval(() => {
+                memoryIndex = (memoryIndex + 1) % memoryImages.length;
+
+                memoryImage.classList.remove("show");
+                void memoryImage.offsetWidth; // force reflow
+                memoryImage.src = memoryImages[memoryIndex];
+                memoryImage.classList.add("show");
+            }, 3000);
         }
-    }
 
-    if (replayBtn) {
-        replayBtn.addEventListener("click", () => {
-            playClick();
-            resetExperience();
-            goToPage(1);
+        function stopAllSongs() {
+            [birthdaySong, giftSong, loveSong].forEach((audio) => {
+                if (!audio) return;
+                audio.pause();
+                audio.currentTime = 0;
+            });
+        }
+
+        function playClick() {
+            if (!clickSound) return;
+            clickSound.currentTime = 0;
+            clickSound.play().catch(() => {});
+        }
+
+        function playSound(el) {
+            if (!el) return;
+            el.currentTime = 0;
+            el.play().catch(() => {});
+        }
+
+        // เปลี่ยนหน้า
+        function goToPage(pageNumber) {
+            const target = document.getElementById("page-" + pageNumber);
+            if (!target) return;
+
+            pages.forEach((p) => p.classList.remove("active", "show"));
+            target.classList.add("active");
+
+            requestAnimationFrame(() => {
+                target.classList.add("show");
+            });
+
+            if (pageNumber === 2) {
+                stopAllSongs();
+                birthdaySong.currentTime = 0;
+                birthdaySong.play().catch(() => {});
+            } else if (pageNumber === 6) {
+                startMemorySlideshow();
+            }
+        }
+
+        function updateCodeDisplay() {
+            if (inputCode.length === 0) {
+                codeDisplay.textContent = "──────";
+                return;
+            }
+            const dots = "•".repeat(inputCode.length);
+            codeDisplay.textContent = dots.padEnd(6, " ");
+        }
+
+        function spawnHeart(x, y) {
+            const heart = document.createElement("span");
+            heart.classList.add("heart");
+            heart.textContent = "❤";
+
+            const rect = heartsContainer.getBoundingClientRect();
+            heart.style.left =
+                x - rect.left + (Math.random() * 16 - 8) + "px";
+            heart.style.top = y - rect.top + "px";
+            heart.style.fontSize = 14 + Math.random() * 6 + "px";
+
+            heartsContainer.appendChild(heart);
+
+            setTimeout(() => {
+                if (heart.parentNode) {
+                    heart.parentNode.removeChild(heart);
+                }
+            }, 1500);
+        }
+
+        // หน้า 1: กดรหัส
+        keypadButtons.forEach((btn) => {
+            btn.addEventListener("click", (e) => {
+                if (inputCode.length >= 6) return;
+                const num = btn.getAttribute("data-num");
+                inputCode += num;
+                updateCodeDisplay();
+
+                playClick();
+
+                const rect = e.target.getBoundingClientRect();
+                spawnHeart(
+                    rect.left + rect.width / 2,
+                    rect.top + rect.height / 2
+                );
+            });
         });
-    }
 
-    // ตั้งคลิปและข้อความเริ่มต้นเป็นหน้า 1 ของสมุด (ไม่ autoplay ตอนโหลดเว็บ)
-    setBookVideo(0, false);
+        clearBtn.addEventListener("click", () => {
+            playClick();
 
-    // เริ่มที่หน้า 1
-    goToPage(1);
-</script>
+            // ลบทีละตัวจากด้านขวา
+            if (inputCode.length > 0) {
+                inputCode = inputCode.slice(0, -1);
+                updateCodeDisplay();
+            }
+        });
+
+        okBtn.addEventListener("click", () => {
+            playClick();
+            if (inputCode === CORRECT_CODE) {
+                inputCode = "";
+                updateCodeDisplay();
+                goToPage(2);
+            } else {
+                codeDisplay.classList.add("error");
+                setTimeout(() => {
+                    codeDisplay.classList.remove("error");
+                }, 350);
+                inputCode = "";
+                updateCodeDisplay();
+            }
+        });
+
+        // หน้า 2: เป่าเค้ก
+        if (blowBtn) {
+            blowBtn.addEventListener("click", () => {
+                playClick();
+
+                if (cake) {
+                    cake.classList.add("blown");
+                }
+
+                setTimeout(() => {
+                    goToPage(3);
+                }, 1500);
+            });
+        }
+
+        // หน้า 3: กล่องของขวัญ
+        if (giftBox) {
+            giftBox.addEventListener("click", () => {
+                playClick();
+
+                if (!giftBox.classList.contains("opened")) {
+                    // เล่นเสียงเปิดกล่องครั้งแรก
+                    playSound(giftOpenSound);
+                }
+
+                giftBox.classList.add("shake");
+                setTimeout(
+                    () => giftBox.classList.remove("shake"),
+                    300
+                );
+
+                giftBox.classList.add("opened");
+
+                if (giftContent) {
+                    giftContent.classList.add("show");
+                }
+            });
+        }
+
+        if (toPage4Btn) {
+            toPage4Btn.addEventListener("click", () => {
+                playClick();
+                goToPage(4);
+            });
+        }
+
+        if (toPage5Btn) {
+            toPage5Btn.addEventListener("click", () => {
+                playClick();
+                goToPage(5);
+            });
+        }
+
+        if (toPage6Btn) {
+            toPage6Btn.addEventListener("click", () => {
+                playClick();
+                goToPage(6);
+            });
+        }
+
+        /* สมุดความทรงจำ: เปลี่ยนคลิป + ข้อความ */
+        function setBookVideo(index, autoplay = true) {
+            if (!bookVideo) return;
+            currentBookIndex = index;
+
+            // ปุ่มแท็บ
+            tabButtons.forEach((btn) => btn.classList.remove("active"));
+            const activeBtn = document.querySelector(`.tab-btn[data-vid="${index}"]`);
+            if (activeBtn) activeBtn.classList.add("active");
+
+            // ข้อความ
+            const data = bookTexts[index];
+            if (data) {
+                if (chapterLabel) chapterLabel.textContent = data.label;
+                if (chapterTitle) chapterTitle.textContent = data.title;
+
+                if (chapterList) {
+                    chapterList.innerHTML = "";
+                    data.lines.forEach((text) => {
+                        const li  = document.createElement("li");
+                        const dot = document.createElement("span");
+                        dot.className = "chapter-dot";
+                        li.appendChild(dot);
+                        li.appendChild(document.createTextNode(" " + text));
+                        chapterList.appendChild(li);
+                    });
+                }
+            }
+
+            // เปลี่ยนไฟล์วิดีโอ
+            bookVideo.pause();
+            const source = bookVideo.querySelector("source");
+            source.src = bookVideos[index];
+            bookVideo.load();
+            bookVideo.muted = true; // ย้ำให้ mute เผื่อบาง browser ลืมอ่าน attribute
+            if (autoplay) {
+                bookVideo.play().catch(() => {});
+            }
+        }
+
+        tabButtons.forEach((btn) => {
+            btn.addEventListener("click", () => {
+                playClick();
+                playSound(pageflipSound);   // เสียงพลิกหน้า
+                const vidIndex = parseInt(btn.getAttribute("data-vid"), 10);
+                setBookVideo(vidIndex, true);
+            });
+        });
+
+        // ฟังก์ชันรีเซ็ตทั้งหมดสำหรับปุ่มเล่นใหม่
+        function resetExperience() {
+            // หยุดเพลงทั้งหมด
+            stopAllSongs();
+
+            // รีเซ็ตรหัส
+            inputCode = "";
+            updateCodeDisplay();
+
+            // รีเซ็ตเค้ก
+            if (cake) {
+                cake.classList.remove("blown");
+            }
+
+            // รีเซ็ตของขวัญ
+            if (giftBox) {
+                giftBox.classList.remove("opened", "shake");
+            }
+            if (giftContent) {
+                giftContent.classList.remove("show");
+            }
+
+            // รีเซ็ตสมุดความทรงจำ
+            if (bookVideo) {
+                bookVideo.pause();
+                bookVideo.currentTime = 0;
+            }
+            setBookVideo(0, false);  // ตั้งกลับหน้า 1 แต่ไม่เล่นอัตโนมัติ
+
+            // รีเซ็ตสไลด์โชว์
+            if (memoryIntervalId) {
+                clearInterval(memoryIntervalId);
+            }
+            memoryIntervalId = null;
+            memorySlideStarted = false;
+            memoryIndex = 0;
+            if (memoryImage) {
+                memoryImage.classList.remove("show");
+                memoryImage.src = memoryImages[0];
+            }
+        }
+
+        if (replayBtn) {
+            replayBtn.addEventListener("click", () => {
+                playClick();
+                resetExperience();
+                goToPage(1);
+            });
+        }
+
+        // ตั้งคลิปและข้อความเริ่มต้นเป็นหน้า 1 ของสมุด (ไม่ autoplay)
+        setBookVideo(0, false);
+
+        // เริ่มที่หน้า 1
+        goToPage(1);
+    </script>
 </body>
 </html>
